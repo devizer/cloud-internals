@@ -55,7 +55,9 @@ before_script:
 
     if [[ "$OS_X_VER" -lt 12 ]]; then
         Say "Install GCC"
-        time brew install gcc@6 
+        command -v travis_wait
+        file $(command -v travis_wait)
+        travis_wait time brew install gcc@6 
     fi
     
     Say "--*******### INSTALL FIO & TOILET ###*******--"
