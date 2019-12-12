@@ -24,9 +24,9 @@
    toilet -f term -F border "$caption ($(pwd))"
    echo "Benchmark '$(pwd)' folder using '$cmd' test during $DURATION seconds heating $RAMP secs, size is $SIZE"
    if [[ $cmd == "rand"* ]]; then
-      fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=fiotest --filename=fiotest --bs=4k --iodepth=64 --size=$SIZE --readwrite=$cmd --runtime=$DURATION --ramp_time=$RAMP
+      fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=run_$cmd --filename=fiotest --bs=4k --iodepth=64 --size=$SIZE --runtime=$DURATION --ramp_time=$RAMP --readwrite=$cmd
    else
-      fio --ioengine=libaio --direct=1 --gtod_reduce=1 --name=fiotest --filename=fiotest --bs=1024k --size=$SIZE --readwrite=$cmd --runtime=$DURATION --ramp_time=$RAMP
+      fio --ioengine=libaio --direct=1 --gtod_reduce=1 --name=run_$cmd --filename=fiotest --bs=1024k --size=$SIZE --runtime=$DURATION --ramp_time=$RAMP --readwrite=$cmd 
    fi
    popd >/dev/null
    echo ""
