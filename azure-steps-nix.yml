@@ -13,6 +13,7 @@ steps:
       echo "working folder ............... [$(pwd)]"
       echo "message ...................... [$BUILD_SOURCEVERSIONMESSAGE]"
       echo "OS_X_VER ..................... [$OS_X_VER]"
+      echo "uname's System ............... [$(uname -s)]"
 
       echo "##vso[task.setvariable variable=OS_X_VER]$OS_X_VER"
     displayName: 'INIT/MAIN [$(OS)]'
@@ -23,6 +24,12 @@ steps:
       & df -h
       & diskutil list
       & sudo fdisk -l
+
+      gdr -PSProvider 'FileSystem'
+      & cmd /c "set | sort"
+      & printenv | sort
+      ""
+
       echo "OK?!"
       exit 0
     displayName: 'Show Nix Info'

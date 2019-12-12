@@ -31,7 +31,7 @@ steps:
       }; Get-Elapsed | out-null;
 
       # Display OS and CPU
-      if ($Env:OS -eq "Windows" -or $true) {
+      if ($Env:OS -eq "Windows") {
           $currentVersion=Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
           $win_10_release_id = $currentVersion.ReleaseId; if (! $win_10_release_id) { $win_10_release_id = $currentVersion.CurrentBuildNumber }
           $win_name = $(Get-WMIObject win32_operatingsystem -EA SilentlyContinue).Caption
@@ -39,9 +39,6 @@ steps:
           $cpu=Get-WmiObject Win32_Processor; Say "CPU: $($cpu.Name), $([System.Environment]::ProcessorCount) Cores";
       }
 
-      gdr -PSProvider 'FileSystem'
-      & cmd /c "set | sort"
-      ""
 
 
     displayName: 'Show Windows Info'
