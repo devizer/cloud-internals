@@ -22,42 +22,6 @@ dotnet_csproj:
   
 platform: Any CPU
 init:
-- sh: |
-    script=https://raw.githubusercontent.com/devizer/test-and-build/master/install-build-tools.sh; (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -ksSL $script) | bash
-    Say "Memory"
-    free -m
-    echo ""
-
-    Say "CPU"
-    lscpu
-    echo ""
-
-    Say "Block Devices"
-    sudo fdisk -l
-    echo ""
-
-    Say "Mount Volumes"
-    df -h -T
-    echo ""
-
-- cmd: mkdir \tmp
-- sh: export NET_TEST_RUNNERS_INSTALL_DIR=~/bin; script=https://raw.githubusercontent.com/devizer/test-and-build/master/install-net-test-runners.sh; (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -ksSL $script) | bash
-- ps: nunit3-console --version; echo ""
-- ps: xunit.console >/tmp/xunit-ver; cat /tmp/xunit-ver | head -2; ""
-- ps: nuget >/tmp/nuget-ver; cat /tmp/nuget-ver | head -1; ""
-- ps: msbuild /version; echo ""
-- ps: dotnet build /version; echo ""
-- ps: 'try { mono --version 2>$null; } catch { $_ }'
-- ps: bash --version; ""
-- ps: bash --version | head -1; ""
-
-- sh: |
-    Say "Installing disk-benchmark"
-    script=https://raw.githubusercontent.com/devizer/glist/master/install-disk-benchmark-from-source.sh; (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -sSL $script) | bash
-    Say "Express disk benchmark (256Mb working set, 5 seconds)"
-    disk-benchmark -s=$((256*1024)) -t=5000 | cat
-    true
-    
 - ps: |
 
     # copy paste it
@@ -81,6 +45,45 @@ init:
         $cpu=Get-WmiObject Win32_Processor; Say "CPU: $($cpu.Name), $([System.Environment]::ProcessorCount) Cores";
     }
 
+- sh: |
+    script=https://raw.githubusercontent.com/devizer/test-and-build/master/install-build-tools.sh; (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -ksSL $script) | bash
+    Say "Memory"
+    free -m
+    echo ""
+
+    Say "CPU"
+    lscpu
+    echo ""
+
+    Say "Block Devices"
+    sudo fdisk -l
+    echo ""
+
+    Say "Mount Volumes"
+    df -h -T
+    echo ""
+
+- cmd: mkdir \tmp
+- ps: nuget >/tmp/nuget-ver; cat /tmp/nuget-ver | head -1; ""
+- ps: msbuild /version; echo ""
+- ps: dotnet build /version; echo ""
+- ps: 'try { mono --version 2>$null; } catch { $_ }'
+- ps: bash --version; ""
+- ps: bash --version | head -1; ""
+# Ubuntu only: install `nunit3-console' and `xunit.console', windows already has preinstalled
+- sh: export NET_TEST_RUNNERS_INSTALL_DIR=~/bin; script=https://raw.githubusercontent.com/devizer/test-and-build/master/install-net-test-runners.sh; (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -ksSL $script) | bash
+- ps: nunit3-console --version; echo ""
+- ps: xunit.console >/tmp/xunit-ver; cat /tmp/xunit-ver | head -2; ""
+- ps: docker version; ""
+- ps: docker-compose version; ""
+
+- sh: |
+    Say "Installing disk-benchmark"
+    script=https://raw.githubusercontent.com/devizer/glist/master/install-disk-benchmark-from-source.sh; (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -sSL $script) | bash
+    Say "Express disk benchmark (256Mb working set, 5 seconds)"
+    disk-benchmark -s=$((256*1024)) -t=5000 | cat
+    true
+    
 install:
 - ps: '$Env:ARTIFACT = "$($Env:APPVEYOR_BUILD_FOLDER)$([IO.Path]::DirectorySeparatorChar)Artifact"; mkdir $Env:ARTIFACT | out-null; Say "ARTIFACT folder: $($Env:ARTIFACT)"'
 - ps: '$Env:SQL_SETUP_LOG_FOLDER = $Env:ARTIFACT; Say "SQL_SETUP_LOG_FOLDER is [$($Env:SQL_SETUP_LOG_FOLDER)]"'
