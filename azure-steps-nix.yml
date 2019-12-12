@@ -18,6 +18,7 @@ steps:
     displayName: 'INIT/MAIN [$(OS)]'
 
   - powershell: |
+      $ErrorActionPreference = "Continue"
       & uname -a
       & df -h
       & diskutil list
