@@ -1,7 +1,7 @@
 version: '0.1.{build}'
 image:
-- Visual Studio 2019
 - Ubuntu1804
+- Visual Studio 2019
 
 environment:
 
@@ -10,8 +10,8 @@ environment:
 
   matrix:
 
-    - NOTHING_SPECIAL: sure
     - LINUX_FIO_BENCHMARK: "12G"
+    - NOTHING_SPECIAL: sure
     - DISK_BENCHMARK: "12582912" # 12G
 
 matrix:
