@@ -6,6 +6,10 @@ git:
 # mono:
 #  - latest
 
+env:
+ - WORKING_SET: "16"
+ - BENCHMARK_DURATION: "120"
+
 matrix:
   include:
 
@@ -47,15 +51,10 @@ before_script:
 
 - |
   if [[ "$OS_X_VER" ]]; then 
-    brew install toilet cmake libffi glib coreutils # | grep 'toilet\|fio\|pv\|pigz\|coreutils'
-    Say "--*******### INSTALL FIO ###*******--"
-    brew install fio # | grep 'toilet\|fio\|pv\|pigz\|coreutils'
+    Say "--*******### INSTALL FIO & TOILET ###*******--"
+    brew install toilet fio # | grep 'toilet\|fio\|pv\|pigz\|coreutils'
   else
-    sudo apt-get update -qq
-    Say "fio?"
-    sudo apt-cache search fio | sort
-    Say "toilet?"
-    sudo apt-cache search toilet | sort
+    sudo apt-cache policy fio
   fi
 
 - |
@@ -78,10 +77,14 @@ script:
 - export CI=false
 - df -h -T || true
 - df -h || true
+- free -m
 - sudo fdisk -l || true
 - lscpu || true
 - sudo lshw || true
-- sudo bash fio-benchmark.sh "Home Folder" "$HOME" 1G 20 2
-    
+- sudo bash fio-benchmark.sh "Home Folder" "$HOME" ${WORKING_SET}G ${BENCHMARK_DURATION} 30
+- |
+  if [[ "$OS_X_VER" -ge 12 || "$TRAVIS_OS_NAME" == "linux" ]]; then
+     disk-benchmark -s=$((WORKING_SET*1024*1024)) -t=${BENCHMARK_DURATION} | cat || true
+  fi
 
 - 'Show-System-Stat || true'
