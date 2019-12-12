@@ -42,8 +42,8 @@ init:
 
 - cmd: mkdir \tmp
 - ps: nunit3-console --version; echo ""
-- ps: xunit.console >/tmp/xunit-ver; cat /tmp/xunit-ver | head -2
-- ps: nuget >/tmp/nuget-ver; cat /tmp/nuget-ver | head -1
+- ps: xunit.console >/tmp/xunit-ver; cat /tmp/xunit-ver | head -2; ""
+- ps: nuget >/tmp/nuget-ver; cat /tmp/nuget-ver | head -1; ""
 - ps: msbuild /version; echo ""
 - ps: dotnet build /version; echo ""
 - ps: 'mono --version 2>$null; ""'
