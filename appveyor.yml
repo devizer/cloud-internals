@@ -11,8 +11,8 @@ environment:
   matrix:
 
     - NOTHING_SPECIAL: sure
-    - DISK_BENCHMARK: "12582912" # 12G
     - LINUX_FIO_BENCHMARK: "12G"
+    - DISK_BENCHMARK: "12582912" # 12G
 
 matrix:
   exclude:
@@ -106,7 +106,7 @@ init:
 - sh: |
     Say "Installing disk-benchmark"
     script=https://raw.githubusercontent.com/devizer/glist/master/install-disk-benchmark-from-source.sh; (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -sSL $script) | bash
-    Say "Express disk benchmark (256Mb working set, 5 seconds)"
+    Say "Express disk benchmark (256Mb working set, 2 seconds)"
     disk-benchmark -s=$((256*1024)) -t=2000 | cat
     true
     
@@ -124,13 +124,6 @@ install:
     
     Say "Install Complete"
 
-- sh: |
-    if [[ "$DISK_BENCHMARK" ]]; then
-       Say "Havy disk-benchmark: $DISK_BENCHMARK Kb"
-       DISK_BENCHMARK=100000
-       disk-benchmark -s=$DISK_BENCHMARK -t=${HAVY_DISK_BENCHMARK_DURATION}000
-    fi
-
 # - sh: 'mono --version || true; dotnet --info || true; '
 
 
@@ -141,8 +134,21 @@ before_build:
     # Upgrade-PSReadLine
 
 build_script:
-- ps: | 
-      Say "Nothing to do"
+- sh: |
+    if [[ "$DISK_BENCHMARK" ]]; then
+       Say "Havy disk-benchmark: $DISK_BENCHMARK Kb"
+       DISK_BENCHMARK=100000
+       HAVY_DISK_BENCHMARK_DURATION=7000
+       disk-benchmark -s=$DISK_BENCHMARK -t=${HAVY_DISK_BENCHMARK_DURATION}000 | cat
+    fi
+
+- sh: |
+    if [[ "$LINUX_FIO_BENCHMARK" ]]; then
+       Say "Havy disk-benchmark: $DISK_BENCHMARK Kb"
+       LINUX_FIO_BENCHMARK=1G
+       HAVY_DISK_BENCHMARK_DURATION=7
+       bash fio-benchmark.sh "$(pwd)" $LINUX_FIO_BENCHMARK $HAVY_DISK_BENCHMARK_DURATION 30
+    fi
 
 - sh: |
       Say "Remove net 4.8 target for msbuild on linux?"
