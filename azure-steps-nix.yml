@@ -49,8 +49,11 @@ steps:
       echo "pwd is '$(pwd)'"
       echo "";echo "";echo "";
 
-      mkdir -p /123a
-      ls -la /
+      mkdir -p /d/123d
+      ls -la /d
+
+      mkdir -p /c/123c
+      ls -la /c
 
       msbuild /version; echo -e "\n\n\n"
       dotnet build /version; echo ""
