@@ -51,8 +51,10 @@ before_script:
 
 - |
   if [[ "$OS_X_VER" ]]; then 
-    Say "Install ruby"
-    time brew install ruby 
+    if [[ "$OS_X_VER" -lt 14 ]]; then
+        Say "Install ruby"
+        time brew install ruby 
+    fi
 
     if [[ "$OS_X_VER" -lt 12 ]]; then
         Say "Install GCC"
