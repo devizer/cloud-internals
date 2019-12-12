@@ -46,6 +46,12 @@ before_script:
   if [[ "$OS_X_VER" ]]; then 
     brew install tiolet
     brew install fio
+  else
+    sudo apt-get update -qq
+    Say "fio?"
+    sudo apt-cache search fio | sort
+    Say "toilet?"
+    sudo apt-cache search toilet | sort
   fi
 
 - |
