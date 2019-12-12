@@ -31,7 +31,7 @@ steps:
       }; Get-Elapsed | out-null;
 
       # Display OS and CPU
-      if ($Env:OS -eq "Windows" || $true) {
+      if ($Env:OS -eq "Windows" -or $true) {
           $currentVersion=Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
           $win_10_release_id = $currentVersion.ReleaseId; if (! $win_10_release_id) { $win_10_release_id = $currentVersion.CurrentBuildNumber }
           $win_name = $(Get-WMIObject win32_operatingsystem -EA SilentlyContinue).Caption
