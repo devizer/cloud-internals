@@ -48,7 +48,9 @@ before_script:
 
 - |
   if [[ "$OS_X_VER" ]]; then 
-    brew install toilet fio coreutils | grep 'toilet\|fio\|pv\|pigz\|coreutils'
+    brew install toilet cmake libffi glib coreutils # | grep 'toilet\|fio\|pv\|pigz\|coreutils'
+    Say "--*******### INSTALL FIO ###*******--"
+    brew install fio # | grep 'toilet\|fio\|pv\|pigz\|coreutils'
   else
     sudo apt-get update -qq
     Say "fio?"
