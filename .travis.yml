@@ -76,6 +76,11 @@ script:
 - export DOTNET_SYSTEM_NET_HTTP_USESOCKETSHTTPHANDLER=0
 - export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1; export DOTNET_CLI_TELEMETRY_OPTOUT=1;
 - export CI=false
+- df -h -T || true
+- df -h || true
+- sudo fdisk -l || true
+- lscpu || true
+- sudo lshw || true
 - bash fio-benchmark.sh "Home Folder" "$HOME" 1G 20 2
     
 
