@@ -39,7 +39,7 @@ init:
 - ps: nuget >/tmp/nuget-ver; cat /tmp/nuget-ver | head -1
 - ps: msbuild /version; echo ""
 - ps: dotnet build /version; echo ""
-- ps: mono --version
+- ps: mono --version; ""
 
 - sh: |
     Say "Installing disk-benchmark"
