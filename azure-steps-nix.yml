@@ -34,4 +34,4 @@ steps:
 
       echo "OK?!"
       exit 0
-    displayName: 'Show Nix Info'
+    displayName: 'Show [$(OS)] Info'
