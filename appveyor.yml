@@ -3,6 +3,26 @@ image:
 - Visual Studio 2019
 - Ubuntu1804
 
+environment:
+
+  Project: "here and there"
+
+  matrix:
+
+    - JUST_NOTHING: sure
+    - DISK_BENCHMARK: "12582912" # 12G
+    - LINUX_FIO_BENCHMARK: "12G"
+
+ 
+matrix:
+  exclude:
+
+    - DISK_BENCHMARK: "12G"
+      image: "Visual Studio 2019"
+
+    - LINUX_FIO_BENCHMARK: "12G"
+      image: "Visual Studio 2019"
+
 skip_commits:
   files:
     - .circleci/*
