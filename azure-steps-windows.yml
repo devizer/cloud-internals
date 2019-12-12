@@ -40,6 +40,7 @@ steps:
       }
 
       gdr -PSProvider 'FileSystem'
+      & cmd /c "set | sort"
       ""
 
 
