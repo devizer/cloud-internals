@@ -50,6 +50,8 @@ before_script:
 
 - |
   if [[ "$OS_X_VER" ]]; then 
+    Say "Install GCC"
+    brew install gcc # | grep 'toilet\|fio\|pv\|pigz\|coreutils'
     Say "--*******### INSTALL FIO & TOILET ###*******--"
     brew install toilet fio # | grep 'toilet\|fio\|pv\|pigz\|coreutils'
   else
@@ -79,6 +81,8 @@ script:
 - free -m || true
 - diskutil list || true
 - sudo fdisk -l || true
+- brew versions fio || true
+- brew versions gcc || true
 - lscpu || true
 - sudo lshw || true
 - sudo bash fio-benchmark.sh "Home Folder" "$HOME" ${WORKING_SET}G ${BENCHMARK_DURATION} 30
