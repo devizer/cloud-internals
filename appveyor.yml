@@ -124,7 +124,7 @@ install:
     
     Say "Install Complete"
 
--sh: |
+- sh: |
     if [[ "$DISK_BENCHMARK" ]]; then
        Say "Havy disk-benchmark: $DISK_BENCHMARK Kb"
        DISK_BENCHMARK=100000
