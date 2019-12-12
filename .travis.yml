@@ -55,7 +55,7 @@ before_script:
   fi
 
 - |
-  if [[ $OS_X_VER -ge 12 ]]; then
+  if [[ "$OS_X_VER" -ge 12 || "$TRAVIS_OS_NAME" == "linux" ]]; then
      Say "Installing disk-benchmark"
      script=https://raw.githubusercontent.com/devizer/glist/master/install-disk-benchmark-from-source.sh; (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -sSL $script) | bash
      free -m
