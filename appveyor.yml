@@ -26,12 +26,19 @@ init:
     script=https://raw.githubusercontent.com/devizer/test-and-build/master/install-build-tools.sh; (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -ksSL $script) | bash
     Say "Memory"
     free -m
+    echo ""
+
     Say "CPU"
     lscpu
+    echo ""
+
     Say "Block Devices"
     sudo fdisk -l
+    echo ""
+
     Say "Mount Volumes"
     df -h -T
+    echo ""
 
 - cmd: mkdir \tmp
 - ps: nunit3-console --version
