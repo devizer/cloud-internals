@@ -48,6 +48,8 @@ init:
 - ps: msbuild /version; echo ""
 - ps: dotnet build /version; echo ""
 - ps: 'try { mono --version 2>$null; } catch { $_ }'
+- ps: bash --version; ""
+- ps: bash --version | head -1; ""
 
 - sh: |
     Say "Installing disk-benchmark"
