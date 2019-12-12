@@ -37,7 +37,7 @@ steps:
     displayName: 'Show [$(OS)] Info'
 
   - bash: |
-      
+      set +e
       sed --version
       echo "";echo "";echo "";
       curl --version
