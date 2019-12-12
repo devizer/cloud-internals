@@ -34,9 +34,11 @@ init:
     df -h T
 
 - ps: nunit3-console --version
-- ps: nunit3-console 
-- ps: xunit.console --version
-- ps: xunit.console
+- ps: xunit.console >/tmp/xunit-ver; cat /tmp/xunit-ver | head -2
+- ps: nuget >/tmp/nuget-ver; cat /tmp/nuget-ver | head -1
+- ps: msbuild /version; echo ""
+- ps: dotnet build /version; echo ""
+- ps: mono --version
 
 - sh: |
     Say "Installing disk-benchmark"
