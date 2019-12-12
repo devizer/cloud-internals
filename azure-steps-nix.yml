@@ -37,12 +37,20 @@ steps:
     displayName: 'Show [$(OS)] Info'
 
   - bash: |
+      
       sed --version
+      echo "";echo "";echo "";
       curl --version
+      echo "";echo "";echo "";
       awk --version
+      echo "";echo "";echo "";
       grep --version
+      echo "";echo "";echo "";
       echo "pwd is '$(pwd)'"
+      echo "";echo "";echo "";
 
+      mkdir -p /123a
+      ls -la /
 
       msbuild /version; echo -e "\n\n\n"
       dotnet build /version; echo ""
@@ -50,7 +58,6 @@ steps:
       nuget
       mono --version
       dotnet --info
-      mkdir -p /123a
         
       # ls -la c:/123a
       # ls -la c:/
