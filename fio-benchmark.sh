@@ -13,7 +13,7 @@
  RAMP=${RAMP:-5}
 
  if [[ "$(command -v fio 2>/dev/null)" == "" || "$(command -v toilet 2>/dev/null)" == "" ]]; then
-   sudo apt install -y fio toilet
+   sudo apt-get install -yqq fio toilet
  fi
 
  function go_fio_1test() {

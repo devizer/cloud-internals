@@ -137,16 +137,16 @@ build_script:
 - sh: |
     if [[ "$DISK_BENCHMARK" ]]; then
        Say "Havy disk-benchmark: $DISK_BENCHMARK Kb"
-       DISK_BENCHMARK=100000
-       HAVY_DISK_BENCHMARK_DURATION=7000
+       # DISK_BENCHMARK=100000
+       # HAVY_DISK_BENCHMARK_DURATION=7000
        disk-benchmark -s=$DISK_BENCHMARK -t=${HAVY_DISK_BENCHMARK_DURATION}000 | cat
     fi
 
 - sh: |
     if [[ "$LINUX_FIO_BENCHMARK" ]]; then
        Say "Havy disk-benchmark: $DISK_BENCHMARK Kb"
-       LINUX_FIO_BENCHMARK=1G
-       HAVY_DISK_BENCHMARK_DURATION=7
+       # LINUX_FIO_BENCHMARK=1G
+       # HAVY_DISK_BENCHMARK_DURATION=7
        bash fio-benchmark.sh "Home Folder" "$HOME" $LINUX_FIO_BENCHMARK $HAVY_DISK_BENCHMARK_DURATION 30
        df -h -T
     fi
