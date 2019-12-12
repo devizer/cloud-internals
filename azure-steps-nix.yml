@@ -23,5 +23,5 @@ steps:
       & df -h
       & diskutil list
       & sudo fdisk -l
-      "OK?"
+      echo "OK?"
     displayName: 'Show Nix Info'
