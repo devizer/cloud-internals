@@ -12,10 +12,17 @@
  DURATION=${DURATION:-30}
  RAMP=${RAMP:-5}
 
+ OS_X_VER=$(sw_vers 2>/dev/null | grep BuildVer | awk '{print $2}' | cut -c1-2 || true); OS_X_VER=$((OS_X_VER-4)); [ "$OS_X_VER" -gt 0 ] || unset OS_X_VER
+
  if [[ "$(command -v fio 2>/dev/null)" == "" || "$(command -v toilet 2>/dev/null)" == "" ]]; then
    echo "Installing fio and toilet"
    sudo apt-get install -yqq fio toilet >/tmp/fio-install.log 2>&1 || sudo apt-get install -yqq fio toilet >/tmp/fio-install.log 2>&1 || sudo cat /tmp/fio-install.log
  fi
+
+echo '
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=fiotest --filename=fiotest --bs=4k --iodepth=64 --size=1G --readwrite=randread
+fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=fiotest --filename=fiotest --bs=4k --iodepth=64 --size=1G --readwrite=randwrite
+' > /dev/null
 
  function go_fio_1test() {
    local cmd=$1
@@ -24,10 +31,11 @@
    pushd "$disk" >/dev/null
    toilet -f term -F border "$caption ($(pwd))"
    echo "Benchmark '$(pwd)' folder using '$cmd' test during $DURATION seconds and heating $RAMP secs, size is $SIZE"
+   [ "$OS_X_VER" -gt 0 ] && ioengine=posixaio || ioengine=libaio
    if [[ $cmd == "rand"* ]]; then
-      fio --name=RUN_$cmd --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --filename=fiotest.tmp --bs=4k --iodepth=64 --size=$SIZE --runtime=$DURATION --ramp_time=$RAMP --readwrite=$cmd
+      fio --name=RUN_$cmd --randrepeat=1 --ioengine=$ioengine --direct=1 --gtod_reduce=1 --filename=fiotest.tmp --bs=4k --iodepth=64 --size=$SIZE --runtime=$DURATION --ramp_time=$RAMP --readwrite=$cmd
    else
-      fio --name=RUN_$cmd --ioengine=libaio --direct=1 --gtod_reduce=1 --filename=fiotest.tmp --bs=1024k --size=$SIZE --runtime=$DURATION --ramp_time=$RAMP --readwrite=$cmd
+      fio --name=RUN_$cmd --ioengine=$ioengine --direct=1 --gtod_reduce=1 --filename=fiotest.tmp --bs=1024k --size=$SIZE --runtime=$DURATION --ramp_time=$RAMP --readwrite=$cmd
    fi
    popd >/dev/null
    echo ""
