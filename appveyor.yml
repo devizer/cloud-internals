@@ -64,6 +64,7 @@ init:
     echo ""
 
 - cmd: mkdir \tmp
+- ps: dotnet --info; ""
 - ps: nuget >/tmp/nuget-ver; cat /tmp/nuget-ver | head -1; ""
 - ps: msbuild /version; echo ""
 - ps: dotnet build /version; echo ""
