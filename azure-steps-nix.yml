@@ -44,6 +44,13 @@ steps:
       mono --version
       dotnet --info
       curl --version
+      mkdir -p c:/123a
+      mkdir c:/123b
+      ls -la c:/123a
+      ls -la c:/
+      cmd /c dir c:\\123a
+      cmd /c dir c:\\123b
+
 
       exit 0
     displayName: 'Show .NET for [$(OS)]'
