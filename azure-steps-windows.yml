@@ -15,7 +15,7 @@ steps:
       echo "OS_X_VER ..................... [$OS_X_VER]"
 
       echo "##vso[task.setvariable variable=OS_X_VER]$OS_X_VER"
-    displayName: 'INIT/MAIN [$(IMAGE)::$(ARCH)] (define FINAL_SIZE and OUTPUT_FOLDER)'
+    displayName: 'INIT/MAIN [$(OS)]'
 
   - powershell: |
       # copy paste it
