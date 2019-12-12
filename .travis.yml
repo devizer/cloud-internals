@@ -13,13 +13,13 @@ matrix:
     os: osx
     osx_image: xcode10.2
 
-  - name: Linux
+  - name: Linux 16.04
     os: linux
     dist: xenial
     services:
         - docker
 
-  - name: Linux
+  - name: Linux 18.04
     os: linux
     dist: bionic
     services:
@@ -43,7 +43,7 @@ before_script:
   echo OS_X_VER: $OS_X_VER
 
 - |
-  if [[ "$OS_X_VER ]]; then 
+  if [[ "$OS_X_VER" ]]; then 
     brew install tiolet
     brew install fio
   fi
