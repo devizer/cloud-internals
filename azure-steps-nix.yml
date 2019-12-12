@@ -30,6 +30,8 @@ steps:
       & printenv | sort
       ""
 
+      "env:psmodulePath is '$($env:psmodulePath)'"
+
       echo "OK?!"
       exit 0
     displayName: 'Show Nix Info'
