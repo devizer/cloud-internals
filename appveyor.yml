@@ -75,6 +75,10 @@ init:
     lscpu
     echo ""
 
+    Say "All Hardware"
+    sudo lshw
+    echo ""
+
     Say "Block Devices"
     sudo fdisk -l
     echo ""
