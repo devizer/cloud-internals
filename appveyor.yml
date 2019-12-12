@@ -11,8 +11,8 @@ environment:
   matrix:
 
     - LINUX_FIO_BENCHMARK: "12G"
-    - NOTHING_SPECIAL: sure
     - DISK_BENCHMARK: "12582912" # 12G
+    - NOTHING_SPECIAL: sure
 
 matrix:
   exclude:
