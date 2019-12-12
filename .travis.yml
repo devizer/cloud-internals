@@ -50,8 +50,12 @@ before_script:
 
 - |
   if [[ "$OS_X_VER" ]]; then 
+    Say "Install ruby"
+    brew install ruby 
+
     Say "Install GCC"
-    brew install gcc # | grep 'toilet\|fio\|pv\|pigz\|coreutils'
+    brew install gcc 
+    
     Say "--*******### INSTALL FIO & TOILET ###*******--"
     brew install toilet fio # | grep 'toilet\|fio\|pv\|pigz\|coreutils'
   else
