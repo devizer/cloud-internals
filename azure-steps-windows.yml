@@ -39,4 +39,8 @@ steps:
           $cpu=Get-WmiObject Win32_Processor; Say "CPU: $($cpu.Name), $([System.Environment]::ProcessorCount) Cores";
       }
 
+      gdr -PSProvider 'FileSystem'
+      ""
+
+
     displayName: 'Show Windows Info'

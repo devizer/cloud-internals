@@ -22,4 +22,5 @@ steps:
       & diskutil list
       & sudo fdisk -l
       & uname -a
+      ""
     displayName: 'Show Nix Info'
