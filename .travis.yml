@@ -1,0 +1,71 @@
+language: shell
+
+git:
+  depth: false
+
+# mono:
+#  - latest
+
+matrix:
+  include:
+
+  - name: OS X 10.14 (.net core & mono)
+    os: osx
+    osx_image: xcode10.2
+
+  - name: Linux
+    os: linux
+    dist: xenial
+    services:
+        - docker
+
+  - name: Linux
+    os: linux
+    dist: bionic
+    services:
+        - docker
+
+  - name: OS X 10.13 (.net core & mono)
+    os: osx
+    osx_image: xcode9.4
+
+  - name: OS X 10.12 (.net core & mono)
+    os: osx
+    osx_image: xcode8.3
+
+
+# https://docs.travis-ci.com/user/caching/
+before_script:
+- 'script=https://raw.githubusercontent.com/devizer/test-and-build/master/install-build-tools.sh; (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -ksSL $script) | bash'
+- |
+  OS_X_VER=$(sw_vers 2>/dev/null | grep BuildVer | awk '{print $2}' | cut -c1-2 || true); OS_X_VER=$((OS_X_VER-4))
+  [ OS_X_VER -gt 0 ] || unset OS_X_VER
+  echo OS_X_VER: $OS_X_VER
+
+- |
+  if [[ "$OS_X_VER ]]; then 
+    brew install tiolet
+    brew install fio
+  fi
+
+- |
+  if [[ $OS_X_VER -ge 12 ]]; then
+     Say "Installing disk-benchmark"
+     script=https://raw.githubusercontent.com/devizer/glist/master/install-disk-benchmark-from-source.sh; (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -sSL $script) | bash
+     free -m
+     Say "Express disk-benchmark"
+     disk-benchmark -s=$((100*1024)) -t=1000 | cat || true
+  fi
+
+- dotnet --info || true
+- mono --version || true
+- 'mono --version; msbuild /version; echo ""; nuget 2>&1 | head -4 || true'
+- 'printenv | sort'
+  
+script:
+- export DOTNET_SYSTEM_NET_HTTP_USESOCKETSHTTPHANDLER=0
+- export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1; export DOTNET_CLI_TELEMETRY_OPTOUT=1;
+- export CI=false
+- bash fio-benchmark.sh "Home Folder" "$HOME" 1G 20 2
+    
+- 'Show-System-Stat || true'

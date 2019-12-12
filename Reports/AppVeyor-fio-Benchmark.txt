@@ -1,0 +1,1333 @@
+﻿[00:00:00] Build started
+[00:00:01] Running "init" scripts
+[00:00:01] 
+[00:00:01] # copy paste it
+[00:00:01] function Say { param( [string] $message )
+[00:00:01]     Write-Host "$(Get-Elapsed) " -NoNewline -ForegroundColor Magenta
+[00:00:01]     Write-Host "$message" -ForegroundColor Yellow
+[00:00:01] }
+[00:00:01] 
+[00:00:01] function Get-Elapsed
+[00:00:01] {
+[00:00:01]     if ($Global:startAt -eq $null) { $Global:startAt = [System.Diagnostics.Stopwatch]::StartNew(); }
+[00:00:01]     [System.String]::Concat("[", (new-object System.DateTime(0)).AddMilliseconds($Global:startAt.ElapsedMilliseconds).ToString("mm:ss"), "]");
+[00:00:01] }; Get-Elapsed | out-null;
+[00:00:01] 
+[00:00:01] # Display OS and CPU
+[00:00:01] if ($isWindows) {
+[00:00:01]     $currentVersion=Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+[00:00:01]     $win_10_release_id = $currentVersion.ReleaseId; if (! $win_10_release_id) { $win_10_release_id = $currentVersion.CurrentBuildNumber }
+[00:00:01]     $win_name = $(Get-WMIObject win32_operatingsystem -EA SilentlyContinue).Caption
+[00:00:01]     Say "$($win_name): Release [$win_10_release_id], powershell [$($PSVersionTable.PSVersion)]"
+[00:00:01]     $cpu=Get-WmiObject Win32_Processor; Say "CPU: $($cpu.Name), $([System.Environment]::ProcessorCount) Cores";
+[00:00:01] }
+[00:00:01] 
+[00:00:03] script=https://raw.githubusercontent.com/devizer/test-and-build/master/install-build-tools.sh; (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -ksSL $script) | bash
+[00:00:03] Say "Memory"
+[00:00:03] free -m
+[00:00:03] echo ""
+[00:00:03] 
+[00:00:03] Say "CPU"
+[00:00:03] lscpu
+[00:00:03] echo ""
+[00:00:03] 
+[00:00:03] Say "All Hardware"
+[00:00:03] sudo lshw
+[00:00:03] echo ""
+[00:00:03] 
+[00:00:03] Say "Block Devices"
+[00:00:03] sudo fdisk -l
+[00:00:03] echo ""
+[00:00:03] 
+[00:00:03] Say "Mount Volumes"
+[00:00:03] df -h -T
+[00:00:03] echo ""
+[00:00:03] 
+[00:00:03] Downloading https://raw.githubusercontent.com/devizer/test-and-build/master/lab/permanent-scripts/Reset-Target-Framework.sh
+[00:00:04] Downloading https://raw.githubusercontent.com/devizer/test-and-build/master/lab/permanent-scripts/Say.sh
+[00:00:04] Downloading https://raw.githubusercontent.com/devizer/test-and-build/master/lab/permanent-scripts/Show-System-Stat.sh
+[00:00:04] Downloading https://raw.githubusercontent.com/devizer/test-and-build/master/lab/permanent-scripts/try-and-retry.sh
+[00:00:04] Downloading https://raw.githubusercontent.com/devizer/test-and-build/master/lab/permanent-scripts/smart-apt-install.sh
+[00:00:04] Downloading https://raw.githubusercontent.com/devizer/test-and-build/master/lab/permanent-scripts/lazy-apt-update.sh
+[00:00:04] Downloading https://raw.githubusercontent.com/devizer/test-and-build/master/lab/permanent-scripts/list-packages.sh
+[00:00:04] Downloading https://raw.githubusercontent.com/devizer/test-and-build/master/lab/permanent-scripts/Is-RedHat.sh
+[00:00:05] ● appveyor-vm [00:00:24] #1 Memory
+[00:00:05]               total        used        free      shared  buff/cache   available
+[00:00:05] Mem:           5771         375        4904           0         491        5170
+[00:00:05] Swap:           979           0         979
+[00:00:05] 
+[00:00:05] ● appveyor-vm [00:00:24] #2 CPU
+[00:00:05] Architecture:        x86_64
+[00:00:05] CPU op-mode(s):      32-bit, 64-bit
+[00:00:05] Byte Order:          Little Endian
+[00:00:05] CPU(s):              2
+[00:00:05] On-line CPU(s) list: 0,1
+[00:00:05] Thread(s) per core:  2
+[00:00:05] Core(s) per socket:  1
+[00:00:05] Socket(s):           1
+[00:00:05] NUMA node(s):        1
+[00:00:05] Vendor ID:           GenuineIntel
+[00:00:05] CPU family:          6
+[00:00:05] Model:               63
+[00:00:05] Model name:          Intel(R) Xeon(R) CPU E5-2697 v3 @ 2.60GHz
+[00:00:05] Stepping:            2
+[00:00:05] CPU MHz:             2599.996
+[00:00:05] BogoMIPS:            5199.99
+[00:00:05] Virtualization:      VT-x
+[00:00:05] Hypervisor vendor:   Microsoft
+[00:00:05] Virtualization type: full
+[00:00:05] L1d cache:           32K
+[00:00:05] L1i cache:           32K
+[00:00:05] L2 cache:            256K
+[00:00:05] L3 cache:            35840K
+[00:00:05] NUMA node0 CPU(s):   0,1
+[00:00:05] Flags:               fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp lm constant_tsc rep_good nopl xtopology cpuid pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm abm invpcid_single pti ssbd ibrs ibpb stibp tpr_shadow vnmi ept vpid ept_ad fsgsbase bmi1 avx2 smep bmi2 erms invpcid xsaveopt flush_l1d arch_capabilities
+[00:00:05] 
+[00:00:05] ● appveyor-vm [00:00:24] #3 All Hardware
+[00:00:05] 
+[00:00:05] DMI
+[00:00:05]    
+[00:00:05] SMP
+[00:00:05]    
+[00:00:05] PA-RISC
+[00:00:05]        
+[00:00:05] device-tree
+[00:00:05]            
+[00:00:05] SPD
+[00:00:05]    
+[00:00:05] memory
+[00:00:05]       
+[00:00:05] /proc/cpuinfo
+[00:00:05]              
+[00:00:05] CPUID
+[00:00:05]      
+[00:00:05] PCI (sysfs)
+[00:00:05]            
+[00:00:05] ISA PnP
+[00:00:05]        
+[00:00:05] PCMCIA
+[00:00:05]       
+[00:00:05] PCMCIA
+[00:00:05]       
+[00:00:05] Virtual I/O (VIRTIO) devices
+[00:00:05]                             
+[00:00:05] kernel device tree (sysfs)
+[00:00:05]                           
+[00:00:05] USB
+[00:00:05]    
+[00:00:05] IDE
+[00:00:05]    
+[00:00:05] SCSI
+[00:00:05]     
+[00:00:05] Network interfaces
+[00:00:05]                   
+[00:00:05] Framebuffer devices
+[00:00:05]                    
+[00:00:05] Display
+[00:00:05]        
+[00:00:05] CPUFreq
+[00:00:05]        
+[00:00:05] ABI
+[00:00:05]    
+[00:00:05] appveyor-vm
+[00:00:05]     description: Desktop Computer
+[00:00:05]     product: Virtual Machine (None)
+[00:00:05]     vendor: Microsoft Corporation
+[00:00:05]     version: Hyper-V UEFI Release v4.0
+[00:00:05]     serial: 5468-5861-1020-3874-7121-8928-18
+[00:00:05]     width: 64 bits
+[00:00:05]     capabilities: smbios-3.1 dmi-3.1 smp vsyscall32
+[00:00:05]     configuration: boot=normal chassis=desktop family=Virtual Machine sku=None uuid=22728758-0FBD-A24F-9E33-4943FF656370
+[00:00:05]   *-core
+[00:00:05]        description: Motherboard
+[00:00:05]        product: Virtual Machine
+[00:00:05]        vendor: Microsoft Corporation
+[00:00:05]        physical id: 0
+[00:00:05]        version: Hyper-V UEFI Release v4.0
+[00:00:05]        serial: 5468-5861-1020-3874-7121-8928-18
+[00:00:05]        slot: Virtual Machine
+[00:00:05]      *-firmware
+[00:00:05]           description: BIOS
+[00:00:05]           vendor: Microsoft Corporation
+[00:00:05]           physical id: 0
+[00:00:05]           version: Hyper-V UEFI Release v4.0
+[00:00:05]           date: 03/13/2019
+[00:00:05]           size: 1MiB
+[00:00:05]           capabilities: acpi uefi virtualmachine
+[00:00:05]      *-cpu
+[00:00:05]           description: CPU
+[00:00:05]           product: Intel(R) Xeon(R) CPU E5-2697 v3 @ 2.60GHz
+[00:00:05]           vendor: Intel Corp.
+[00:00:05]           physical id: 4
+[00:00:05]           bus info: cpu@0
+[00:00:05]           version: Intel(R) Xeon(R) CPU E5-2697 v3 @ 2.60GHz
+[00:00:05]           serial: None
+[00:00:05]           slot: None
+[00:00:05]           size: 2600MHz
+[00:00:05]           capacity: 3600MHz
+[00:00:05]           width: 64 bits
+[00:00:05]           clock: 100MHz
+[00:00:05]           capabilities: x86-64 fpu fpu_exception wp vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ss ht syscall nx pdpe1gb rdtscp constant_tsc rep_good nopl xtopology cpuid pni pclmulqdq vmx ssse3 fma cx16 pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm abm invpcid_single pti ssbd ibrs ibpb stibp tpr_shadow vnmi ept vpid ept_ad fsgsbase bmi1 avx2 smep bmi2 erms invpcid xsaveopt flush_l1d arch_capabilities
+[00:00:05]           configuration: cores=2 enabledcores=2 threads=1
+[00:00:05]      *-memory
+[00:00:05]           description: System Memory
+[00:00:05]           physical id: 6
+[00:00:05]           slot: System board or motherboard
+[00:00:05]           size: 6000MiB
+[00:00:05]         *-bank:0
+[00:00:05]              product: None
+[00:00:05]              vendor: Microsoft Corporation
+[00:00:05]              physical id: 0
+[00:00:05]              serial: None
+[00:00:05]              slot: M0001
+[00:00:05]              size: 3968MiB
+[00:00:05]         *-bank:1
+[00:00:05]              product: None
+[00:00:05]              vendor: Microsoft Corporation
+[00:00:05]              physical id: 1
+[00:00:05]              serial: None
+[00:00:05]              slot: M0002
+[00:00:05]              size: 2032MiB
+[00:00:05]      *-scsi
+[00:00:05]           physical id: 1
+[00:00:05]           logical name: scsi0
+[00:00:05]         *-disk
+[00:00:05]              description: SCSI Disk
+[00:00:05]              product: Virtual Disk
+[00:00:05]              vendor: Msft
+[00:00:05]              physical id: 0.0.0
+[00:00:05]              bus info: scsi@0:0.0.0
+[00:00:05]              logical name: /dev/sda
+[00:00:05]              version: 1.0
+[00:00:05]              size: 60GiB (64GB)
+[00:00:05]              capabilities: gpt-1.00 partitioned partitioned:gpt
+[00:00:05]              configuration: ansiversion=5 guid=5bcef04b-54bc-4cba-b470-2eb0179c0841 logicalsectorsize=512 sectorsize=4096
+[00:00:05]            *-volume:0 UNCLAIMED
+[00:00:05]                 description: Windows FAT volume
+[00:00:05]                 vendor: mkfs.fat
+[00:00:05]                 physical id: 1
+[00:00:05]                 bus info: scsi@0:0.0.0,1
+[00:00:05]                 version: FAT32
+[00:00:05]                 serial: 85f9-039a
+[00:00:05]                 size: 510MiB
+[00:00:05]                 capacity: 511MiB
+[00:00:05]                 capabilities: boot fat initialized
+[00:00:05]                 configuration: FATs=2 filesystem=fat
+[00:00:05]            *-volume:1
+[00:00:05]                 description: LVM Physical Volume
+[00:00:05]                 vendor: Linux
+[00:00:05]                 physical id: 2
+[00:00:05]                 bus info: scsi@0:0.0.0,2
+[00:00:05]                 logical name: /dev/sda2
+[00:00:05]                 serial: FU65Ms-GBPa-BGi9-DSZ1-gQrt-usBL-8fCF9F
+[00:00:05]                 size: 59GiB
+[00:00:05]                 capabilities: multi lvm2
+[00:00:05]   *-network
+[00:00:05]        description: Ethernet interface
+[00:00:05]        physical id: 1
+[00:00:05]        logical name: eth0
+[00:00:05]        serial: 00:15:5d:a5:42:8f
+[00:00:05]        size: 10Gbit/s
+[00:00:05]        capabilities: ethernet physical
+[00:00:05]        configuration: autonegotiation=off broadcast=yes driver=hv_netvsc duplex=full firmware=N/A ip=10.0.0.2 link=yes multicast=yes speed=10Gbit/s
+[00:00:05] 
+[00:00:05] ● appveyor-vm [00:00:25] #4 Block Devices
+[00:00:05] Disk /dev/sda: 60 GiB, 64424509440 bytes, 125829120 sectors
+[00:00:05] Units: sectors of 1 * 512 = 512 bytes
+[00:00:05] Sector size (logical/physical): 512 bytes / 4096 bytes
+[00:00:05] I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+[00:00:05] Disklabel type: gpt
+[00:00:05] Disk identifier: 5BCEF04B-54BC-4CBA-B470-2EB0179C0841
+[00:00:05] 
+[00:00:05] Device       Start       End   Sectors  Size Type
+[00:00:05] /dev/sda1     2048   1050623   1048576  512M EFI System
+[00:00:05] /dev/sda2  1050624 125827071 124776448 59.5G Linux LVM
+[00:00:05] 
+[00:00:05] 
+[00:00:05] Disk /dev/mapper/appveyor--u18--vg-root: 58.6 GiB, 62855839744 bytes, 122765312 sectors
+[00:00:05] Units: sectors of 1 * 512 = 512 bytes
+[00:00:05] Sector size (logical/physical): 512 bytes / 4096 bytes
+[00:00:05] I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+[00:00:05] 
+[00:00:05] 
+[00:00:05] Disk /dev/mapper/appveyor--u18--vg-swap_1: 980 MiB, 1027604480 bytes, 2007040 sectors
+[00:00:05] Units: sectors of 1 * 512 = 512 bytes
+[00:00:05] Sector size (logical/physical): 512 bytes / 4096 bytes
+[00:00:05] I/O size (minimum/optimal): 4096 bytes / 4096 bytes
+[00:00:05] 
+[00:00:05] ● appveyor-vm [00:00:25] #5 Mount Volumes
+[00:00:05] Filesystem                         Type      Size  Used Avail Use% Mounted on
+[00:00:05] udev                               devtmpfs  2.8G     0  2.8G   0% /dev
+[00:00:05] tmpfs                              tmpfs     578M  452K  577M   1% /run
+[00:00:05] /dev/mapper/appveyor--u18--vg-root ext4       58G   31G   25G  56% /
+[00:00:05] tmpfs                              tmpfs     2.9G   12K  2.9G   1% /dev/shm
+[00:00:05] tmpfs                              tmpfs     5.0M     0  5.0M   0% /run/lock
+[00:00:05] tmpfs                              tmpfs     2.9G     0  2.9G   0% /sys/fs/cgroup
+[00:00:05] /dev/sda1                          vfat      511M  6.1M  505M   2% /boot/efi
+[00:00:05] 
+[00:00:05] dotnet --info; ""
+[00:00:06] .NET Core SDK (reflecting any global.json):
+[00:00:06]  Version:   3.0.101
+[00:00:06]  Commit:    bc5f8df0f5
+[00:00:06] 
+[00:00:06] Runtime Environment:
+[00:00:06]  OS Name:     ubuntu
+[00:00:06]  OS Version:  18.04
+[00:00:06]  OS Platform: Linux
+[00:00:06]  RID:         ubuntu.18.04-x64
+[00:00:06]  Base Path:   /usr/share/dotnet/sdk/3.0.101/
+[00:00:06] 
+[00:00:06] Host (useful for support):
+[00:00:06]   Version: 3.0.1
+[00:00:06]   Commit:  19942e7199
+[00:00:06] 
+[00:00:06] .NET Core SDKs installed:
+[00:00:06]   1.1.11 [/usr/share/dotnet/sdk]
+[00:00:06]   2.1.105 [/usr/share/dotnet/sdk]
+[00:00:06]   2.1.200 [/usr/share/dotnet/sdk]
+[00:00:06]   2.1.201 [/usr/share/dotnet/sdk]
+[00:00:06]   2.1.802 [/usr/share/dotnet/sdk]
+[00:00:06]   2.2.402 [/usr/share/dotnet/sdk]
+[00:00:06]   3.0.101 [/usr/share/dotnet/sdk]
+[00:00:06] 
+[00:00:06] .NET Core runtimes installed:
+[00:00:06]   Microsoft.AspNetCore.All 2.1.14 [/usr/share/dotnet/shared/Microsoft.AspNetCore.All]
+[00:00:06]   Microsoft.AspNetCore.All 2.2.8 [/usr/share/dotnet/shared/Microsoft.AspNetCore.All]
+[00:00:06]   Microsoft.AspNetCore.App 2.1.14 [/usr/share/dotnet/shared/Microsoft.AspNetCore.App]
+[00:00:06]   Microsoft.AspNetCore.App 2.2.8 [/usr/share/dotnet/shared/Microsoft.AspNetCore.App]
+[00:00:06]   Microsoft.AspNetCore.App 3.0.1 [/usr/share/dotnet/shared/Microsoft.AspNetCore.App]
+[00:00:06]   Microsoft.NETCore.App 1.1.10 [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+[00:00:06]   Microsoft.NETCore.App 2.0.7 [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+[00:00:06]   Microsoft.NETCore.App 2.1.14 [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+[00:00:06]   Microsoft.NETCore.App 2.2.8 [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+[00:00:06]   Microsoft.NETCore.App 3.0.1 [/usr/share/dotnet/shared/Microsoft.NETCore.App]
+[00:00:06] 
+[00:00:06] To install additional .NET Core runtimes or SDKs:
+[00:00:06]   https://aka.ms/dotnet-download
+[00:00:06] 
+[00:00:06] nuget >/tmp/nuget-ver; cat /tmp/nuget-ver | head -1; ""
+[00:00:07] NuGet Version: 5.3.1.6268
+[00:00:07] 
+[00:00:07] msbuild /version; echo ""
+[00:00:07] Microsoft (R) Build Engine version 16.3.0-ci for Mono
+[00:00:07] Copyright (C) Microsoft Corporation. All rights reserved.
+[00:00:07] 
+[00:00:07] 16.300.19.41901
+[00:00:08] dotnet build /version; echo ""
+[00:00:08] Microsoft (R) Build Engine version 16.3.2+e481bbf88 for .NET Core
+[00:00:08] Copyright (C) Microsoft Corporation. All rights reserved.
+[00:00:08] 
+[00:00:08] 16.3.2.50909
+[00:00:08] try { mono --version 2>$null; } catch { $_ }
+[00:00:08] Mono JIT compiler version 6.4.0.198 (tarball Tue Sep 24 01:21:28 UTC 2019)
+[00:00:08] Copyright (C) 2002-2014 Novell, Inc, Xamarin Inc and Contributors. www.mono-project.com
+[00:00:08]  TLS:           __thread
+[00:00:08]  SIGSEGV:       altstack
+[00:00:08]  Notifications: epoll
+[00:00:08]  Architecture:  amd64
+[00:00:08]  Disabled:      none
+[00:00:08]  Misc:          softdebug 
+[00:00:08]  Interpreter:   yes
+[00:00:08]  LLVM:          yes(610)
+[00:00:08]  Suspend:       hybrid
+[00:00:08]  GC:            sgen (concurrent by default)
+[00:00:08] bash --version; ""
+[00:00:08] GNU bash, version 4.4.20(1)-release (x86_64-pc-linux-gnu)
+[00:00:08] Copyright (C) 2016 Free Software Foundation, Inc.
+[00:00:08] License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+[00:00:08] 
+[00:00:08] This is free software; you are free to change and redistribute it.
+[00:00:08] There is NO WARRANTY, to the extent permitted by law.
+[00:00:08] 
+[00:00:09] bash --version | head -1; ""
+[00:00:09] GNU bash, version 4.4.20(1)-release (x86_64-pc-linux-gnu)
+[00:00:09] 
+[00:00:09] export NET_TEST_RUNNERS_INSTALL_DIR=~/bin; script=https://raw.githubusercontent.com/devizer/test-and-build/master/install-net-test-runners.sh; (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -ksSL $script) | bash
+[00:00:09] Enqueue loading the NUnit.ConsoleRunner package
+[00:00:10] Enqueue loading the NUnit.Extension.NUnitV2Driver package
+[00:00:10] Enqueue loading the NUnit.Extension.NUnitV2ResultWriter package
+[00:00:11] Enqueue loading the NUnit.Extension.TeamCityEventListener package
+[00:00:12] Enqueue loading the xunit.abstractions package
+[00:00:13] Enqueue loading the xunit.analyzers package
+[00:00:13] Enqueue loading the xunit.assert package
+[00:00:14] Enqueue loading the xunit.core package
+[00:00:15] Enqueue loading the xunit.extensibility.core package
+[00:00:15] Enqueue loading the xunit.extensibility.execution package
+[00:00:16] Enqueue loading the xunit.runner.console package
+[00:00:17] Enqueue loading the xunit.runner.msbuild package
+[00:00:18] Enqueue loading the xunit.runner.reporters package
+[00:00:18] Enqueue loading the xunit.runner.utility package
+[00:00:19] 1/14 wait for 1505 job
+[00:00:19] 2/14 wait for 1514 job
+[00:00:19] 3/14 wait for 1523 job
+[00:00:19] 4/14 wait for 1534 job
+[00:00:19] 5/14 wait for 1547 job
+[00:00:19] 6/14 wait for 1555 job
+[00:00:19] 7/14 wait for 1576 job
+[00:00:21] 8/14 wait for 1584 job
+[00:00:22] 9/14 wait for 1598 job
+[00:00:23] 10/14 wait for 1606 job
+[00:00:23] 11/14 wait for 1620 job
+[00:00:24] 12/14 wait for 1628 job
+[00:00:24] 13/14 wait for 1638 job
+[00:00:25] Error downloading 'xunit.runner.utility.2.4.1 : xunit.abstractions [2.0.3, )' from 'https://api.nuget.org/v3-flatcontainer/xunit.runner.utility/2.4.1/xunit.runner.utility.2.4.1.nupkg'.
+[00:00:25]   Could not find file '/home/appveyor/.nuget/packages/xunit.runner.utility/2.4.1/93j8e87e.tf0'.
+[00:00:26] 14/14 wait for 1649 job
+[00:00:26] ~/bin ~/projects/cloud-internals
+[00:00:26] [packages/NUnit.ConsoleRunner*/tools] found: [/home/appveyor/bin/packages/NUnit.ConsoleRunner.3.10.0/tools]
+[00:00:26] Creating link to /home/appveyor/bin/packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe as nunit3-console[.exe]
+[00:00:26] ok: Unit Test Runner [nunit3-console.exe] SUCCESSFULLY LINKED as [/home/appveyor/bin/packages/NUnit.ConsoleRunner.3.10.0/tools/nunit3-console.exe] to /usr/local/bin/nunit3-console
+[00:00:26] [packages/xunit.runner.console*/tools/net472] found: [/home/appveyor/bin/packages/xunit.runner.console.2.4.1/tools/net472]
+[00:00:26] Creating link to /home/appveyor/bin/packages/xunit.runner.console.2.4.1/tools/net472/xunit.console.exe as xunit.console[.exe]
+[00:00:26] ok: Unit Test Runner [xunit.console.exe] SUCCESSFULLY LINKED as [/home/appveyor/bin/packages/xunit.runner.console.2.4.1/tools/net472/xunit.console.exe] to /usr/local/bin/xunit.console
+[00:00:27] Check nunit3-console version ... NUnit Console Runner 3.10.0 (.NET 2.0)
+[00:00:27] Check xunit.console version .... xUnit.net Console Runner v2.4.1 (64-bit Desktop .NET 4.7.2, runtime: 4.0.30319.42000)
+[00:00:27] nunit3-console --version; echo ""
+[00:00:27] NUnit Console Runner 3.10.0 (.NET 2.0)
+[00:00:27] Copyright (c) 2019 Charlie Poole, Rob Prouse
+[00:00:27] Thursday, 12 December 2019 10:34:56
+[00:00:27] 
+[00:00:27] 
+[00:00:27] xunit.console >/tmp/xunit-ver; cat /tmp/xunit-ver | head -2; ""
+[00:00:27] xUnit.net Console Runner v2.4.1 (64-bit Desktop .NET 4.7.2, runtime: 4.0.30319.42000)
+[00:00:27] Copyright (C) .NET Foundation.
+[00:00:27] 
+[00:00:27] docker version; ""
+[00:00:28] Client: Docker Engine - Community
+[00:00:28]  Version:           19.03.5
+[00:00:28]  API version:       1.40
+[00:00:28]  Go version:        go1.12.12
+[00:00:28]  Git commit:        633a0ea838
+[00:00:28]  Built:             Wed Nov 13 07:29:52 2019
+[00:00:28]  OS/Arch:           linux/amd64
+[00:00:28]  Experimental:      false
+[00:00:28] 
+[00:00:28] Server: Docker Engine - Community
+[00:00:28]  Engine:
+[00:00:28]   Version:          19.03.5
+[00:00:28]   API version:      1.40 (minimum version 1.12)
+[00:00:28]   Go version:       go1.12.12
+[00:00:28]   Git commit:       633a0ea838
+[00:00:28]   Built:            Wed Nov 13 07:28:22 2019
+[00:00:28]   OS/Arch:          linux/amd64
+[00:00:28]   Experimental:     false
+[00:00:28]  containerd:
+[00:00:28]   Version:          1.2.10
+[00:00:28]   GitCommit:        b34a5c8af56e510852c35414db4c1f4fa6172339
+[00:00:28]  runc:
+[00:00:28]   Version:          1.0.0-rc8+dev
+[00:00:28]   GitCommit:        3e425f80a8c931f88e6d94a8c831b9d5aa481657
+[00:00:28]  docker-init:
+[00:00:28]   Version:          0.18.0
+[00:00:28]   GitCommit:        fec3683
+[00:00:28] 
+[00:00:29] # docker-compose is nissed on Ubuntu
+[00:00:29] url="https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)"
+[00:00:29] sudo curl --fail -ksSL -o /usr/local/bin/docker-compose $url
+[00:00:29] sudo chmod +x /usr/local/bin/docker-compose
+[00:00:29] 
+[00:00:30] docker-compose version; ""
+[00:00:31] docker-compose version 1.24.1, build 4667896b
+[00:00:31] docker-py version: 3.7.3
+[00:00:31] CPython version: 3.6.8
+[00:00:31] OpenSSL version: OpenSSL 1.1.0j  20 Nov 2018
+[00:00:31] 
+[00:00:31] Say "Installing disk-benchmark"
+[00:00:31] script=https://raw.githubusercontent.com/devizer/glist/master/install-disk-benchmark-from-source.sh; (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -sSL $script) | bash
+[00:00:31] Say "Express disk benchmark (256Mb working set, 2 seconds)"
+[00:00:31] disk-benchmark -s=$((256*1024)) -t=2000 | cat
+[00:00:31] true
+[00:00:31] 
+[00:00:31] ● appveyor-vm [00:00:51] #6 Installing disk-benchmark
+[00:00:32] Cloning into 'KernelManagementLab'...
+[00:00:32] remote: Enumerating objects: 38, done.
+[00:00:32] remote: Counting objects:   2% (1/38)
+[00:00:32] remote: Counting objects:   5% (2/38)
+[00:00:32] remote: Counting objects:   7% (3/38)
+[00:00:32] remote: Counting objects:  10% (4/38)
+[00:00:32] remote: Counting objects:  13% (5/38)
+[00:00:32] remote: Counting objects:  15% (6/38)
+[00:00:32] remote: Counting objects:  18% (7/38)
+[00:00:32] remote: Counting objects:  21% (8/38)
+[00:00:32] remote: Counting objects:  23% (9/38)
+[00:00:32] remote: Counting objects:  26% (10/38)
+[00:00:32] remote: Counting objects:  28% (11/38)
+[00:00:32] remote: Counting objects:  31% (12/38)
+[00:00:32] remote: Counting objects:  34% (13/38)
+[00:00:32] remote: Counting objects:  36% (14/38)
+[00:00:32] remote: Counting objects:  39% (15/38)
+[00:00:32] remote: Counting objects:  42% (16/38)
+[00:00:32] remote: Counting objects:  44% (17/38)
+[00:00:32] remote: Counting objects:  47% (18/38)
+[00:00:32] remote: Counting objects:  50% (19/38)
+[00:00:32] remote: Counting objects:  52% (20/38)
+[00:00:32] remote: Counting objects:  55% (21/38)
+[00:00:32] remote: Counting objects:  57% (22/38)
+[00:00:32] remote: Counting objects:  60% (23/38)
+[00:00:32] remote: Counting objects:  63% (24/38)
+[00:00:32] remote: Counting objects:  65% (25/38)
+[00:00:32] remote: Counting objects:  68% (26/38)
+[00:00:32] remote: Counting objects:  71% (27/38)
+[00:00:32] remote: Counting objects:  73% (28/38)
+[00:00:32] remote: Counting objects:  76% (29/38)
+[00:00:32] remote: Counting objects:  78% (30/38)
+[00:00:32] remote: Counting objects:  81% (31/38)
+[00:00:32] remote: Counting objects:  84% (32/38)
+[00:00:32] remote: Counting objects:  86% (33/38)
+[00:00:32] remote: Counting objects:  89% (34/38)
+[00:00:32] remote: Counting objects:  92% (35/38)
+[00:00:32] remote: Counting objects:  94% (36/38)
+[00:00:32] remote: Counting objects:  97% (37/38)
+[00:00:32] remote: Counting objects: 100% (38/38)
+[00:00:32] remote: Counting objects: 100% (38/38), done.
+[00:00:32] remote: Compressing objects:   3% (1/30)
+[00:00:32] remote: Compressing objects:   6% (2/30)
+[00:00:32] remote: Compressing objects:  10% (3/30)
+[00:00:32] remote: Compressing objects:  13% (4/30)
+[00:00:32] remote: Compressing objects:  16% (5/30)
+[00:00:32] remote: Compressing objects:  20% (6/30)
+[00:00:32] remote: Compressing objects:  23% (7/30)
+[00:00:32] remote: Compressing objects:  26% (8/30)
+[00:00:32] remote: Compressing objects:  30% (9/30)
+[00:00:32] remote: Compressing objects:  33% (10/30)
+[00:00:32] remote: Compressing objects:  36% (11/30)
+[00:00:32] remote: Compressing objects:  40% (12/30)
+[00:00:32] remote: Compressing objects:  43% (13/30)
+[00:00:32] remote: Compressing objects:  46% (14/30)
+[00:00:32] remote: Compressing objects:  50% (15/30)
+[00:00:32] remote: Compressing objects:  53% (16/30)
+[00:00:32] remote: Compressing objects:  56% (17/30)
+[00:00:32] remote: Compressing objects:  60% (18/30)
+[00:00:32] remote: Compressing objects:  63% (19/30)
+[00:00:32] remote: Compressing objects:  66% (20/30)
+[00:00:32] remote: Compressing objects:  70% (21/30)
+[00:00:32] remote: Compressing objects:  73% (22/30)
+[00:00:32] remote: Compressing objects:  76% (23/30)
+[00:00:32] remote: Compressing objects:  80% (24/30)
+[00:00:32] remote: Compressing objects:  83% (25/30)
+[00:00:32] remote: Compressing objects:  86% (26/30)
+[00:00:32] remote: Compressing objects:  90% (27/30)
+[00:00:32] remote: Compressing objects:  93% (28/30)
+[00:00:32] remote: Compressing objects:  96% (29/30)
+[00:00:32] remote: Compressing objects: 100% (30/30)
+[00:00:32] remote: Compressing objects: 100% (30/30), done.
+[00:00:32] Receiving objects:   0% (1/8325)
+[00:00:32] Receiving objects:   1% (84/8325)
+[00:00:32] Receiving objects:   2% (167/8325)
+[00:00:32] Receiving objects:   3% (250/8325)
+[00:00:32] Receiving objects:   4% (333/8325)
+[00:00:32] Receiving objects:   5% (417/8325)
+[00:00:32] Receiving objects:   6% (500/8325)
+[00:00:32] Receiving objects:   7% (583/8325)
+[00:00:32] Receiving objects:   8% (666/8325)
+[00:00:32] Receiving objects:   9% (750/8325)
+[00:00:32] Receiving objects:  10% (833/8325)
+[00:00:32] Receiving objects:  11% (916/8325)
+[00:00:32] Receiving objects:  12% (999/8325)
+[00:00:32] Receiving objects:  13% (1083/8325)
+[00:00:32] Receiving objects:  14% (1166/8325)
+[00:00:32] Receiving objects:  15% (1249/8325)
+[00:00:32] Receiving objects:  16% (1332/8325)
+[00:00:32] Receiving objects:  17% (1416/8325)
+[00:00:32] Receiving objects:  18% (1499/8325)
+[00:00:32] Receiving objects:  19% (1582/8325)
+[00:00:32] Receiving objects:  20% (1665/8325)
+[00:00:32] Receiving objects:  21% (1749/8325)
+[00:00:32] Receiving objects:  22% (1832/8325)
+[00:00:32] Receiving objects:  23% (1915/8325)
+[00:00:32] Receiving objects:  24% (1998/8325)
+[00:00:32] Receiving objects:  25% (2082/8325)
+[00:00:32] Receiving objects:  26% (2165/8325)
+[00:00:32] Receiving objects:  27% (2248/8325)
+[00:00:32] Receiving objects:  28% (2331/8325)
+[00:00:32] Receiving objects:  29% (2415/8325)
+[00:00:32] Receiving objects:  30% (2498/8325)
+[00:00:32] Receiving objects:  31% (2581/8325)
+[00:00:32] Receiving objects:  32% (2664/8325)
+[00:00:32] Receiving objects:  33% (2748/8325)
+[00:00:32] Receiving objects:  34% (2831/8325)
+[00:00:32] Receiving objects:  35% (2914/8325)
+[00:00:32] Receiving objects:  36% (2997/8325)
+[00:00:32] Receiving objects:  37% (3081/8325)
+[00:00:32] Receiving objects:  38% (3164/8325)
+[00:00:32] Receiving objects:  39% (3247/8325)
+[00:00:32] Receiving objects:  40% (3330/8325)
+[00:00:32] Receiving objects:  41% (3414/8325)
+[00:00:32] Receiving objects:  42% (3497/8325)
+[00:00:32] Receiving objects:  43% (3580/8325)
+[00:00:32] Receiving objects:  44% (3663/8325)
+[00:00:32] Receiving objects:  45% (3747/8325)
+[00:00:32] Receiving objects:  46% (3830/8325)
+[00:00:32] Receiving objects:  47% (3913/8325)
+[00:00:32] Receiving objects:  48% (3996/8325)
+[00:00:32] Receiving objects:  49% (4080/8325)
+[00:00:32] Receiving objects:  50% (4163/8325)
+[00:00:32] Receiving objects:  51% (4246/8325)
+[00:00:32] Receiving objects:  52% (4329/8325)
+[00:00:32] Receiving objects:  53% (4413/8325)
+[00:00:32] Receiving objects:  54% (4496/8325)
+[00:00:32] Receiving objects:  55% (4579/8325)
+[00:00:32] Receiving objects:  56% (4662/8325)
+[00:00:32] Receiving objects:  57% (4746/8325)
+[00:00:32] Receiving objects:  58% (4829/8325)
+[00:00:32] Receiving objects:  59% (4912/8325)
+[00:00:32] Receiving objects:  60% (4995/8325)
+[00:00:32] Receiving objects:  61% (5079/8325)
+[00:00:32] Receiving objects:  62% (5162/8325)
+[00:00:32] Receiving objects:  63% (5245/8325)
+[00:00:32] Receiving objects:  64% (5328/8325)
+[00:00:32] Receiving objects:  65% (5412/8325)
+[00:00:32] Receiving objects:  66% (5495/8325)
+[00:00:32] Receiving objects:  67% (5578/8325)
+[00:00:32] Receiving objects:  68% (5661/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  69% (5745/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  70% (5828/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  71% (5911/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  72% (5994/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  73% (6078/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  74% (6161/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  75% (6244/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  76% (6327/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  77% (6411/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  78% (6494/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  79% (6577/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  80% (6660/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  81% (6744/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  82% (6827/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  83% (6910/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  84% (6993/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  85% (7077/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  86% (7160/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  87% (7243/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  88% (7326/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  89% (7410/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  90% (7493/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  91% (7576/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  92% (7659/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  93% (7743/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  94% (7826/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  95% (7909/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  96% (7992/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] remote: Total 8325 (delta 18), reused 24 (delta 8), pack-reused 8287
+[00:00:32] Receiving objects:  97% (8076/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  98% (8159/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects:  99% (8242/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects: 100% (8325/8325), 14.71 MiB | 29.41 MiB/s
+[00:00:32] Receiving objects: 100% (8325/8325), 16.07 MiB | 29.87 MiB/s, done.
+[00:00:32] Resolving deltas:   0% (0/6013)
+[00:00:32] Resolving deltas:   6% (383/6013)
+[00:00:32] Resolving deltas:   9% (568/6013)
+[00:00:32] Resolving deltas:  10% (609/6013)
+[00:00:32] Resolving deltas:  12% (737/6013)
+[00:00:33] Resolving deltas:  15% (907/6013)
+[00:00:33] Resolving deltas:  16% (998/6013)
+[00:00:33] Resolving deltas:  17% (1032/6013)
+[00:00:33] Resolving deltas:  18% (1127/6013)
+[00:00:33] Resolving deltas:  20% (1226/6013)
+[00:00:33] Resolving deltas:  22% (1339/6013)
+[00:00:33] Resolving deltas:  23% (1434/6013)
+[00:00:33] Resolving deltas:  24% (1468/6013)
+[00:00:33] Resolving deltas:  25% (1508/6013)
+[00:00:33] Resolving deltas:  26% (1573/6013)
+[00:00:33] Resolving deltas:  27% (1643/6013)
+[00:00:33] Resolving deltas:  28% (1684/6013)
+[00:00:33] Resolving deltas:  29% (1795/6013)
+[00:00:33] Resolving deltas:  34% (2058/6013)
+[00:00:33] Resolving deltas:  40% (2461/6013)
+[00:00:33] Resolving deltas:  41% (2478/6013)
+[00:00:33] Resolving deltas:  45% (2761/6013)
+[00:00:33] Resolving deltas:  46% (2784/6013)
+[00:00:33] Resolving deltas:  47% (2827/6013)
+[00:00:33] Resolving deltas:  48% (2887/6013)
+[00:00:33] Resolving deltas:  49% (2992/6013)
+[00:00:33] Resolving deltas:  50% (3020/6013)
+[00:00:33] Resolving deltas:  51% (3102/6013)
+[00:00:33] Resolving deltas:  52% (3135/6013)
+[00:00:33] Resolving deltas:  55% (3342/6013)
+[00:00:33] Resolving deltas:  56% (3402/6013)
+[00:00:33] Resolving deltas:  57% (3470/6013)
+[00:00:33] Resolving deltas:  58% (3490/6013)
+[00:00:33] Resolving deltas:  60% (3617/6013)
+[00:00:33] Resolving deltas:  61% (3679/6013)
+[00:00:33] Resolving deltas:  62% (3735/6013)
+[00:00:33] Resolving deltas:  63% (3846/6013)
+[00:00:33] Resolving deltas:  64% (3858/6013)
+[00:00:33] Resolving deltas:  65% (3917/6013)
+[00:00:33] Resolving deltas:  66% (3975/6013)
+[00:00:33] Resolving deltas:  67% (4030/6013)
+[00:00:33] Resolving deltas:  68% (4094/6013)
+[00:00:33] Resolving deltas:  69% (4180/6013)
+[00:00:33] Resolving deltas:  70% (4218/6013)
+[00:00:33] Resolving deltas:  71% (4284/6013)
+[00:00:33] Resolving deltas:  72% (4332/6013)
+[00:00:33] Resolving deltas:  73% (4391/6013)
+[00:00:33] Resolving deltas:  74% (4451/6013)
+[00:00:33] Resolving deltas:  75% (4515/6013)
+[00:00:33] Resolving deltas:  76% (4574/6013)
+[00:00:33] Resolving deltas:  77% (4654/6013)
+[00:00:33] Resolving deltas:  78% (4695/6013)
+[00:00:33] Resolving deltas:  79% (4753/6013)
+[00:00:33] Resolving deltas:  80% (4814/6013)
+[00:00:33] Resolving deltas:  81% (4872/6013)
+[00:00:33] Resolving deltas:  82% (4936/6013)
+[00:00:33] Resolving deltas:  83% (5001/6013)
+[00:00:33] Resolving deltas:  84% (5069/6013)
+[00:00:33] Resolving deltas:  85% (5130/6013)
+[00:00:33] Resolving deltas:  86% (5183/6013)
+[00:00:33] Resolving deltas:  87% (5243/6013)
+[00:00:33] Resolving deltas:  88% (5332/6013)
+[00:00:33] Resolving deltas:  89% (5378/6013)
+[00:00:33] Resolving deltas:  90% (5415/6013)
+[00:00:33] Resolving deltas:  91% (5490/6013)
+[00:00:33] Resolving deltas:  92% (5540/6013)
+[00:00:33] Resolving deltas:  93% (5603/6013)
+[00:00:33] Resolving deltas:  94% (5674/6013)
+[00:00:33] Resolving deltas:  95% (5727/6013)
+[00:00:33] Resolving deltas:  96% (5778/6013)
+[00:00:33] Resolving deltas:  97% (5872/6013)
+[00:00:33] Resolving deltas:  98% (5895/6013)
+[00:00:33] Resolving deltas:  99% (5956/6013)
+[00:00:33] Resolving deltas: 100% (6013/6013)
+[00:00:33] Resolving deltas: 100% (6013/6013), done.
+[00:00:33] Already up to date.
+[00:00:33] Microsoft (R) Build Engine version 16.3.2+e481bbf88 for .NET Core
+[00:00:33] Copyright (C) Microsoft Corporation. All rights reserved.
+[00:00:33] 
+[00:00:38] ThreadInfo/MacOsThreadInfo.cs(31,13): warning CS0162: Unreachable code detected [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:38] Benchmarks/ReadonlyDiskBenchmark.cs(186,18): warning CS0219: The variable 'prevNotification' is assigned but its value is never used [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:38] CrossInfo/CrossInfo.cs(247,13): warning CS0162: Unreachable code detected [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:38] Benchmarks/DiskBenchmark.cs(362,18): warning CS0219: The variable 'prevNotification' is assigned but its value is never used [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:38] Benchmarks/LinuxDirectReadonlyFileStreamV2.cs(216,68): warning CS0168: The variable 'ex' is declared but never used [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:38] Benchmarks/DiskBenchmarkChecks.cs(39,29): warning CS0168: The variable 'ex' is declared but never used [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:38] FileSystemHelper.cs(82,30): warning CS0168: The variable 'ex' is declared but never used [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:38] Benchmarks/DiskBenchmarkChecks.cs(95,29): warning CS0168: The variable 'ex' is declared but never used [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:38] FileSystemHelper.cs(100,30): warning CS0168: The variable 'ex' is declared but never used [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:38] DebugUtils/DebugDumper.cs(27,17): warning CS0162: Unreachable code detected [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:38] Benchmarks/ReadonlyDiskBenchmark.cs(302,28): warning CS0649: Field 'ReadonlyDiskBenchmark.FileInfo.ExpressCompression' is never assigned to, and will always have its default value [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:38] Benchmarks/LinuxDirectReadonlyFileStream.cs(10,22): warning CS0414: The field 'LinuxDirectReadonlyFileStream._Position' is assigned but its value is never used [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:39] 
+[00:00:39] Build succeeded.
+[00:00:39] 
+[00:00:39] ThreadInfo/MacOsThreadInfo.cs(31,13): warning CS0162: Unreachable code detected [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:39] Benchmarks/ReadonlyDiskBenchmark.cs(186,18): warning CS0219: The variable 'prevNotification' is assigned but its value is never used [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:39] CrossInfo/CrossInfo.cs(247,13): warning CS0162: Unreachable code detected [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:39] Benchmarks/DiskBenchmark.cs(362,18): warning CS0219: The variable 'prevNotification' is assigned but its value is never used [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:39] Benchmarks/LinuxDirectReadonlyFileStreamV2.cs(216,68): warning CS0168: The variable 'ex' is declared but never used [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:39] Benchmarks/DiskBenchmarkChecks.cs(39,29): warning CS0168: The variable 'ex' is declared but never used [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:39] FileSystemHelper.cs(82,30): warning CS0168: The variable 'ex' is declared but never used [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:39] Benchmarks/DiskBenchmarkChecks.cs(95,29): warning CS0168: The variable 'ex' is declared but never used [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:39] FileSystemHelper.cs(100,30): warning CS0168: The variable 'ex' is declared but never used [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:39] DebugUtils/DebugDumper.cs(27,17): warning CS0162: Unreachable code detected [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:39] Benchmarks/ReadonlyDiskBenchmark.cs(302,28): warning CS0649: Field 'ReadonlyDiskBenchmark.FileInfo.ExpressCompression' is never assigned to, and will always have its default value [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:39] Benchmarks/LinuxDirectReadonlyFileStream.cs(10,22): warning CS0414: The field 'LinuxDirectReadonlyFileStream._Position' is assigned but its value is never used [/home/appveyor/build/disk-benchmark-source/KernelManagementLab/KernelManagementJam/KernelManagementJam.csproj]
+[00:00:39]     12 Warning(s)
+[00:00:39]     0 Error(s)
+[00:00:39] 
+[00:00:39] Time Elapsed 00:00:03.62
+[00:00:39] #!/usr/bin/env bash
+[00:00:39]         set -e
+[00:00:39]         export DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1
+[00:00:39]         export DOTNET_ROOT="/usr/bin"
+[00:00:39]         /usr/bin/dotnet /home/appveyor/build/disk-benchmark-source/KernelManagementLab/BenchmarkLab/bin/temp/Universe.Benchmark.dll "$@"
+[00:00:39]      
+[00:00:39] Disk Benchmark [v1.18.1335.119] tool is a console spinoff of the KernelManagementJam for w3top app
+[00:00:39]   -p, --Path=VALUE          Path ot disk. Default is current
+[00:00:39]   -s, --Size=VALUE          Working Size (Kb) default is 4096*1024
+[00:00:39]   -b, --Block=VALUE         Random access block size, default is 4096
+[00:00:39]   -t, --Time=VALUE          Random access duration (milliseconds), default is 30000
+[00:00:39]   -f, --Flavour=VALUE       Data flavour as random|42|lorem-ipsum|code, default is random
+[00:00:39]   -d, --Disable-O-DIRECT    Disable O_DIRECT, default is auto-detect
+[00:00:39]   -v, --version             Display version
+[00:00:39]   -h, -?, --Help            Display this help
+[00:00:39]   -n, --nologo              Hide logo
+[00:00:39] 
+[00:00:39] If disk/volume supports compression it is important to specify a flavour of the data (-f=VALUE or --flavour=VALUE):
+[00:00:39]  - 42 (maximum compression ~99.9%)
+[00:00:39]  - lorem-ipsum (high compression ~80%)
+[00:00:39]  - code (popular, compression is ~50%)
+[00:00:39]  - random (compression impossible)
+[00:00:39] ● appveyor-vm [00:00:59] #7 Express disk benchmark (256Mb working set, 2 seconds)
+[00:00:39] Disk Benchmark [v1.18.1335.119] tool is a console spinoff of the KernelManagementJam for w3top app
+[00:00:39] Xamarin's Syscall.posix_fadvise is present
+[00:00:41] .
+[00:00:41] [Completed]  Direct Access is detected
+[00:00:44] .......
+[00:00:44] [Completed]  100.0% 00:00:03   68.5M/s Allocate 256M
+[00:00:45] .
+[00:00:45] [Completed]  100.0% 00:00:00  611.6M/s Sequential read
+[00:00:46] ..
+[00:00:46] [Completed]  100.0% 00:00:00  422.4M/s Sequential write
+[00:00:48] ....
+[00:00:48] [Completed]  100.1% 00:00:02 8976.5K/s Random Read, 1 thread
+[00:00:50] ....
+[00:00:50] [Completed]  100.1% 00:00:02 4766.5K/s Random Write, 1 thread
+[00:00:52] ....
+[00:00:52] [Completed]  100.1% 00:00:02  133.4M/s Random Read, 16 threads
+[00:00:54] ....
+[00:00:54] Disk: /home/appveyor/projects/cloud-internals, WorkingSet: 256M, Flavour: Random, Block: 4096 bytes
+[00:00:54] [Completed]  Direct Access is detected
+[00:00:54] [Completed]  100.0% 00:00:03   68.5M/s Allocate 256M
+[00:00:54] [Completed]  100.0% 00:00:00  611.6M/s Sequential read
+[00:00:54] [Completed]  100.0% 00:00:00  422.4M/s Sequential write
+[00:00:54] [Completed]  100.1% 00:00:02 8976.5K/s Random Read, 1 thread
+[00:00:54] [Completed]  100.1% 00:00:02 4766.5K/s Random Write, 1 thread
+[00:00:54] [Completed]  100.1% 00:00:02  133.4M/s Random Read, 16 threads
+[00:00:54] [Completed]  100.3% 00:00:02   45.3M/s Random Write, 16 threads
+[00:00:54] [Completed]  Clean up
+[00:00:54] git clone -q --depth=99999999 --branch=master https://github.com/devizer/cloud-internals.git /home/appveyor/projects/cloud-internals
+[00:00:54] git checkout -qf b98b618ba82969e32204e52e9af285b119007227
+[00:00:55] Running "install" scripts
+[00:00:55] $Env:ARTIFACT = "$($Env:APPVEYOR_BUILD_FOLDER)$([IO.Path]::DirectorySeparatorChar)Artifact"; mkdir $Env:ARTIFACT | out-null; Say "ARTIFACT folder: $($Env:ARTIFACT)"
+[00:00:55] [00:51] ARTIFACT folder: /home/appveyor/projects/cloud-internals/Artifact
+[00:00:55] $Env:SQL_SETUP_LOG_FOLDER = $Env:ARTIFACT; Say "SQL_SETUP_LOG_FOLDER is [$($Env:SQL_SETUP_LOG_FOLDER)]"
+[00:00:55] [00:51] SQL_SETUP_LOG_FOLDER is [/home/appveyor/projects/cloud-internals/Artifact]
+[00:00:55] Start-Transcript "Artifact\Detailed-Build.log" -Force
+[00:00:55] Transcript started, output file is Artifact\Detailed-Build.log
+[00:00:55] git submodule update --init --recursive
+[00:00:55] 
+[00:00:55] $commitsRaw = & { set TZ=GMT; git log -n 999999 --date=raw --pretty=format:"%cd" }
+[00:00:55] $lines = $commitsRaw.Split([Environment]::NewLine)
+[00:00:55] $ENV:COMMIT_COUNT = $lines.Length
+[00:00:55] Say "COMMIT_COUNT: $($ENV:COMMIT_COUNT)"
+[00:00:55] 
+[00:00:55] Say "Install Complete"
+[00:00:55] 
+[00:00:56] [00:52] COMMIT_COUNT: 39
+[00:00:56] [00:52] Install Complete
+[00:00:56] Patching .NET Core .csproj files
+[00:00:56] No .NET Core .csproj files found
+[00:00:56] Running "before_build" scripts
+[00:00:56] Say "Nothing to do"
+[00:00:56] 
+[00:00:56] [00:52] Nothing to do
+[00:00:56] Running "build_script" scripts
+[00:00:56] if [[ "$DISK_BENCHMARK" ]]; then
+[00:00:56]    Say "Havy 'disk-benchmark': $((DISK_BENCHMARK/1024)) Mb, $HAVY_DISK_BENCHMARK_DURATION seconds for each test"
+[00:00:56]    # DISK_BENCHMARK=100000
+[00:00:56]    # HAVY_DISK_BENCHMARK_DURATION=7000
+[00:00:56]    disk-benchmark -s=$DISK_BENCHMARK -t=${HAVY_DISK_BENCHMARK_DURATION}000 | cat
+[00:00:56] fi
+[00:00:56] 
+[00:00:56] if [[ "$LINUX_FIO_BENCHMARK" ]]; then
+[00:00:56]    Say "Havy 'fio' disk benchmark : $LINUX_FIO_BENCHMARK, $HAVY_DISK_BENCHMARK_DURATION seconds for each test"
+[00:00:56]    # LINUX_FIO_BENCHMARK=1G
+[00:00:56]    # HAVY_DISK_BENCHMARK_DURATION=7
+[00:00:56]    bash fio-benchmark.sh "Home Folder" "$HOME" $LINUX_FIO_BENCHMARK $HAVY_DISK_BENCHMARK_DURATION 30
+[00:00:56]    df -h -T
+[00:00:56] fi
+[00:00:56] 
+[00:00:56] ● appveyor-vm [00:01:16] #8 Havy 'fio' disk benchmark : 12G, 120 seconds for each test
+[00:00:56] Installing fio and toilet
+[00:01:03] ┌─────────────────────────────────────────────┐
+[00:01:03] │Home Folder: Sequential read (/home/appveyor)│
+[00:01:03] └─────────────────────────────────────────────┘
+[00:01:03] Benchmark '/home/appveyor' folder using 'read' test during 120 seconds and heating 30 secs, size is 12G
+[00:01:03] RUN_read: (g=0): rw=read, bs=(R) 1024KiB-1024KiB, (W) 1024KiB-1024KiB, (T) 1024KiB-1024KiB, ioengine=libaio, iodepth=1
+[00:01:03] fio-3.1
+[00:01:03] Starting 1 process
+[00:01:03] RUN_read: Laying out IO file (1 file / 12288MiB)
+[00:01:16] Jobs: 1 (f=0)
+[00:01:16] Jobs: 1 (f=0)
+[00:01:16] Jobs: 1 (f=0)
+[00:01:17] Jobs: 1 (f=0)
+[00:01:17] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:27s]
+[00:01:17] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:27s]
+[00:01:17] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:27s]
+[00:01:18] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:27s]
+[00:01:18] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:26s]
+[00:01:18] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:26s]
+[00:01:18] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:26s]
+[00:01:19] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:26s]
+[00:01:19] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:25s]
+[00:01:19] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:25s]
+[00:01:19] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:25s]
+[00:01:20] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:25s]
+[00:01:20] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:24s]
+[00:01:20] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:24s]
+[00:01:20] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:24s]
+[00:01:21] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:24s]
+[00:01:21] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:23s]
+[00:01:21] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:23s]
+[00:01:21] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:23s]
+[00:01:22] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:23s]
+[00:01:22] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:22s]
+[00:01:22] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:22s]
+[00:01:22] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:22s]
+[00:01:23] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:22s]
+[00:01:23] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:21s]
+[00:01:23] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:21s]
+[00:01:23] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:21s]
+[00:01:24] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:21s]
+[00:01:24] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:20s]
+[00:01:24] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:20s]
+[00:01:24] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:20s]
+[00:01:25] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:20s]
+[00:01:25] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:19s]
+[00:01:25] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:19s]
+[00:01:25] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:19s]
+[00:01:26] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:19s]
+[00:01:26] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:18s]
+[00:01:26] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:18s]
+[00:01:26] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:18s]
+[00:01:27] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:18s]
+[00:01:27] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:17s]
+[00:01:27] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:17s]
+[00:01:27] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:17s]
+[00:01:28] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:17s]
+[00:01:28] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:16s]
+[00:01:28] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:16s]
+[00:01:28] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:16s]
+[00:01:29] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:16s]
+[00:01:29] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:15s]
+[00:01:29] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:15s]
+[00:01:29] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:15s]
+[00:01:30] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:15s]
+[00:01:30] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:14s]
+[00:01:30] Jobs: 1 (f=0): [f(1)][-.-%][r=800MiB/s,w=0KiB/s][r=799,w=0 IOPS][eta 00m:00s]
+[00:01:30] RUN_read: (groupid=0, jobs=1): err= 0: pid=3025: Thu Dec 12 10:35:59 2019
+[00:01:30]    read: IOPS=806, BW=807MiB/s (846MB/s)(12.0GiB/15235msec)
+[00:01:30]   cpu          : usr=0.42%, sys=5.95%, ctx=12331, majf=0, minf=268
+[00:01:30]   IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%, >=64=0.0%
+[00:01:30]      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+[00:01:30]      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+[00:01:30]      issued rwt: total=12288,0,0, short=0,0,0, dropped=0,0,0
+[00:01:30]      latency   : target=0, window=0, percentile=100.00%, depth=1
+[00:01:30] 
+[00:01:30] Run status group 0 (all jobs):
+[00:01:30]    READ: bw=807MiB/s (846MB/s), 807MiB/s-807MiB/s (846MB/s-846MB/s), io=12.0GiB (12.9GB), run=15235-15235msec
+[00:01:30] 
+[00:01:30] Disk stats (read/write):
+[00:01:30]     dm-0: ios=24304/13, merge=0/0, ticks=24340/0, in_queue=24340, util=98.87%, aggrios=24584/5, aggrmerge=11/8, aggrticks=24966/2, aggrin_queue=824, aggrutil=98.55%
+[00:01:30]   sda: ios=24584/5, merge=11/8, ticks=24966/2, in_queue=824, util=98.55%
+[00:01:30] 
+[00:01:30] ┌──────────────────────────────────────────────┐
+[00:01:30] │Home Folder: Sequential write (/home/appveyor)│
+[00:01:30] └──────────────────────────────────────────────┘
+[00:01:30] Benchmark '/home/appveyor' folder using 'write' test during 120 seconds and heating 30 secs, size is 12G
+[00:01:30] RUN_write: (g=0): rw=write, bs=(R) 1024KiB-1024KiB, (W) 1024KiB-1024KiB, (T) 1024KiB-1024KiB, ioengine=libaio, iodepth=1
+[00:01:30] fio-3.1
+[00:01:30] Starting 1 process
+[00:01:31] Jobs: 1 (f=0)
+[00:01:32] Jobs: 1 (f=0)
+[00:01:32] Jobs: 1 (f=0)
+[00:01:32] Jobs: 1 (f=0)
+[00:01:32] Jobs: 1 (f=0)
+[00:01:33] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:27s]
+[00:01:33] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:27s]
+[00:01:33] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:27s]
+[00:01:33] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:27s]
+[00:01:34] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:26s]
+[00:01:34] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:26s]
+[00:01:34] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:26s]
+[00:01:34] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:26s]
+[00:01:35] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:25s]
+[00:01:35] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:25s]
+[00:01:35] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:25s]
+[00:01:35] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:25s]
+[00:01:36] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:24s]
+[00:01:36] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:24s]
+[00:01:36] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:24s]
+[00:01:36] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:24s]
+[00:01:37] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:23s]
+[00:01:37] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:23s]
+[00:01:37] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:23s]
+[00:01:37] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:23s]
+[00:01:38] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:22s]
+[00:01:38] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:22s]
+[00:01:38] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:22s]
+[00:01:38] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:22s]
+[00:01:39] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:21s]
+[00:01:39] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:21s]
+[00:01:39] RUN_write: (groupid=0, jobs=1): err= 0: pid=3033: Thu Dec 12 10:36:08 2019
+[00:01:39]   write: IOPS=1456, BW=1456MiB/s (1527MB/s)(12.0GiB/8438msec)
+[00:01:39]   cpu          : usr=3.51%, sys=9.28%, ctx=12342, majf=0, minf=12
+[00:01:39]   IO depths    : 1=100.0%, 2=0.0%, 4=0.0%, 8=0.0%, 16=0.0%, 32=0.0%, >=64=0.0%
+[00:01:39]      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+[00:01:39]      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+[00:01:39]      issued rwt: total=0,12288,0, short=0,0,0, dropped=0,0,0
+[00:01:39]      latency   : target=0, window=0, percentile=100.00%, depth=1
+[00:01:39] 
+[00:01:39] Run status group 0 (all jobs):
+[00:01:39]   WRITE: bw=1456MiB/s (1527MB/s), 1456MiB/s-1456MiB/s (1527MB/s-1527MB/s), io=12.0GiB (12.9GB), run=8438-8438msec
+[00:01:39] 
+[00:01:39] Disk stats (read/write):
+[00:01:39]     dm-0: ios=3/24456, merge=0/0, ticks=8/13460, in_queue=13468, util=97.60%, aggrios=3/24583, aggrmerge=0/9, aggrticks=7/13805, aggrin_queue=364, aggrutil=97.13%
+[00:01:39]   sda: ios=3/24583, merge=0/9, ticks=7/13805, in_queue=364, util=97.13%
+[00:01:39] 
+[00:01:39] ┌─────────────────────────────────────────┐
+[00:01:39] │Home Folder: Random read (/home/appveyor)│
+[00:01:39] └─────────────────────────────────────────┘
+[00:01:39] Benchmark '/home/appveyor' folder using 'randread' test during 120 seconds and heating 30 secs, size is 12G
+[00:01:39] RUN_randread: (g=0): rw=randread, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=libaio, iodepth=64
+[00:01:39] fio-3.1
+[00:01:39] Starting 1 process
+[00:01:40] Jobs: 1 (f=0)
+[00:01:41] Jobs: 1 (f=0)
+[00:01:41] Jobs: 1 (f=0)
+[00:01:41] Jobs: 1 (f=0)
+[00:01:41] Jobs: 1 (f=0)
+[00:01:42] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:27s]
+[00:01:42] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:27s]
+[00:01:42] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:27s]
+[00:01:42] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:27s]
+[00:01:43] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:26s]
+[00:01:43] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:26s]
+[00:01:43] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:26s]
+[00:01:43] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:26s]
+[00:01:44] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:25s]
+[00:01:44] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:25s]
+[00:01:44] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:25s]
+[00:01:44] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:25s]
+[00:01:45] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:24s]
+[00:01:45] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:24s]
+[00:01:45] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:24s]
+[00:01:45] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:24s]
+[00:01:46] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:23s]
+[00:01:46] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:23s]
+[00:01:46] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:23s]
+[00:01:46] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:23s]
+[00:01:47] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:22s]
+[00:01:47] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:22s]
+[00:01:47] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:22s]
+[00:01:47] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:22s]
+[00:01:48] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:21s]
+[00:01:48] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:21s]
+[00:01:48] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:21s]
+[00:01:48] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:21s]
+[00:01:49] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:20s]
+[00:01:49] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:20s]
+[00:01:49] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:20s]
+[00:01:49] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:20s]
+[00:01:50] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:19s]
+[00:01:50] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:19s]
+[00:01:50] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:19s]
+[00:01:50] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:19s]
+[00:01:51] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:18s]
+[00:01:51] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:18s]
+[00:01:51] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:18s]
+[00:01:51] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:18s]
+[00:01:52] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:17s]
+[00:01:52] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:17s]
+[00:01:52] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:17s]
+[00:01:52] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:17s]
+[00:01:53] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:16s]
+[00:01:53] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:16s]
+[00:01:53] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:16s]
+[00:01:53] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:16s]
+[00:01:54] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:15s]
+[00:01:54] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:15s]
+[00:01:54] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:15s]
+[00:01:54] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:15s]
+[00:01:55] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:14s]
+[00:01:55] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:14s]
+[00:01:55] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:14s]
+[00:01:55] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:14s]
+[00:01:56] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:13s]
+[00:01:56] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:13s]
+[00:01:56] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:13s]
+[00:01:56] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:13s]
+[00:01:57] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:12s]
+[00:01:57] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:12s]
+[00:01:57] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:12s]
+[00:01:57] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:12s]
+[00:01:58] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:11s]
+[00:01:58] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:11s]
+[00:01:58] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:11s]
+[00:01:58] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:11s]
+[00:01:59] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:10s]
+[00:01:59] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:10s]
+[00:01:59] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:10s]
+[00:01:59] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:10s]
+[00:02:00] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:09s]
+[00:02:00] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:09s]
+[00:02:00] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:09s]
+[00:02:00] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:09s]
+[00:02:01] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:08s]
+[00:02:01] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:08s]
+[00:02:01] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:08s]
+[00:02:01] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:08s]
+[00:02:02] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:07s]
+[00:02:02] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:07s]
+[00:02:02] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:07s]
+[00:02:02] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:07s]
+[00:02:03] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:06s]
+[00:02:03] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:06s]
+[00:02:03] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:06s]
+[00:02:03] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:06s]
+[00:02:04] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:05s]
+[00:02:04] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:05s]
+[00:02:04] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:05s]
+[00:02:04] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:05s]
+[00:02:05] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:04s]
+[00:02:05] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:04s]
+[00:02:05] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:04s]
+[00:02:05] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:04s]
+[00:02:06] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:03s]
+[00:02:06] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:03s]
+[00:02:06] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:03s]
+[00:02:06] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:03s]
+[00:02:07] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:02s]
+[00:02:07] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:02s]
+[00:02:07] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:02s]
+[00:02:07] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:02s]
+[00:02:08] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:01s]
+[00:02:08] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:01s]
+[00:02:08] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:01s]
+[00:02:08] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:01s]
+[00:02:09] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:00s]
+[00:02:09] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:00s]
+[00:02:09] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:00s]
+[00:02:09] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:00s]
+[00:02:10] Jobs: 1 (f=1): [r(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 00m:00s]
+[00:02:11] Jobs: 1 (f=1): [r(1)][48.5%][r=344MiB/s,w=0KiB/s][r=87.0k,w=0 IOPS][eta 00m:34s]
+[00:02:12] Jobs: 1 (f=1): [r(1)][49.3%][r=338MiB/s,w=0KiB/s][r=86.6k,w=0 IOPS][eta 00m:34s]
+[00:02:13] Jobs: 1 (f=1): [r(1)][50.7%][r=340MiB/s,w=0KiB/s][r=87.1k,w=0 IOPS][eta 00m:33s]
+[00:02:14] Jobs: 1 (f=1): [r(1)][53.0%][r=345MiB/s,w=0KiB/s][r=88.3k,w=0 IOPS][eta 00m:31s]
+[00:02:15] Jobs: 1 (f=1): [r(1)][53.7%][r=303MiB/s,w=0KiB/s][r=77.6k,w=0 IOPS][eta 00m:31s]
+[00:02:15] RUN_randread: No I/O performed by libaio, perhaps try --debug=io option for details?
+[00:02:15] Jobs: 1 (f=0): [f(1)][100.0%][r=339MiB/s,w=0KiB/s][r=86.8k,w=0 IOPS][eta 00m:00s]
+[00:02:15] RUN_randread: (groupid=0, jobs=1): err= 0: pid=3046: Thu Dec 12 10:36:45 2019
+[00:02:15]    read: IOPS=85.9k, BW=335MiB/s (352MB/s)(2008MiB/5986msec)
+[00:02:15]    bw (  KiB/s): min=275736, max=365064, per=99.84%, avg=342945.36, stdev=24468.02, samples=11
+[00:02:15]    iops        : min=68934, max=91266, avg=85735.18, stdev=6116.89, samples=11
+[00:02:15]   cpu          : usr=14.57%, sys=56.41%, ctx=18087, majf=0, minf=3
+[00:02:15]   IO depths    : 1=0.1%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=612.0%
+[00:02:15]      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+[00:02:15]      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.1%, >=64=0.0%
+[00:02:15]      issued rwt: total=513972,0,0, short=0,0,0, dropped=0,0,0
+[00:02:15]      latency   : target=0, window=0, percentile=100.00%, depth=64
+[00:02:15] 
+[00:02:15] Run status group 0 (all jobs):
+[00:02:15]    READ: bw=335MiB/s (352MB/s), 335MiB/s-335MiB/s (352MB/s-352MB/s), io=2008MiB (2105MB), run=5986-5986msec
+[00:02:15] 
+[00:02:15] Disk stats (read/write):
+[00:02:15]     dm-0: ios=3126257/57, merge=0/0, ticks=1807780/8, in_queue=1807788, util=99.06%, aggrios=3145787/27, aggrmerge=6/30, aggrticks=1829029/18, aggrin_queue=74000, aggrutil=98.98%
+[00:02:15]   sda: ios=3145787/27, merge=6/30, ticks=1829029/18, in_queue=74000, util=98.98%
+[00:02:15] 
+[00:02:15] ┌──────────────────────────────────────────┐
+[00:02:15] │Home Folder: Random write (/home/appveyor)│
+[00:02:15] └──────────────────────────────────────────┘
+[00:02:15] Benchmark '/home/appveyor' folder using 'randwrite' test during 120 seconds and heating 30 secs, size is 12G
+[00:02:15] RUN_randwrite: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, (T) 4096B-4096B, ioengine=libaio, iodepth=64
+[00:02:15] fio-3.1
+[00:02:15] Starting 1 process
+[00:02:17] Jobs: 1 (f=0)
+[00:02:17] Jobs: 1 (f=0)
+[00:02:17] Jobs: 1 (f=0)
+[00:02:17] Jobs: 1 (f=0)
+[00:02:18] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:28s]
+[00:02:18] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:27s]
+[00:02:18] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:27s]
+[00:02:18] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:27s]
+[00:02:19] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:27s]
+[00:02:19] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:26s]
+[00:02:19] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:26s]
+[00:02:19] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:26s]
+[00:02:20] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:26s]
+[00:02:20] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:25s]
+[00:02:20] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:25s]
+[00:02:20] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:25s]
+[00:02:21] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:25s]
+[00:02:21] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:24s]
+[00:02:21] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:24s]
+[00:02:21] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:24s]
+[00:02:22] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:24s]
+[00:02:22] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:23s]
+[00:02:22] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:23s]
+[00:02:22] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:23s]
+[00:02:23] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:23s]
+[00:02:23] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:22s]
+[00:02:23] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:22s]
+[00:02:23] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:22s]
+[00:02:24] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:22s]
+[00:02:24] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:21s]
+[00:02:24] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:21s]
+[00:02:24] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:21s]
+[00:02:25] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:21s]
+[00:02:25] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:20s]
+[00:02:25] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:20s]
+[00:02:25] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:20s]
+[00:02:26] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:20s]
+[00:02:26] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:19s]
+[00:02:26] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:19s]
+[00:02:26] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:19s]
+[00:02:27] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:19s]
+[00:02:27] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:18s]
+[00:02:27] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:18s]
+[00:02:27] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:18s]
+[00:02:28] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:18s]
+[00:02:28] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:17s]
+[00:02:28] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:17s]
+[00:02:28] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:17s]
+[00:02:29] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:17s]
+[00:02:29] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:16s]
+[00:02:29] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:16s]
+[00:02:29] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:16s]
+[00:02:30] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:16s]
+[00:02:30] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:15s]
+[00:02:30] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:15s]
+[00:02:30] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:15s]
+[00:02:31] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:15s]
+[00:02:31] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:14s]
+[00:02:31] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:14s]
+[00:02:31] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:14s]
+[00:02:32] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:14s]
+[00:02:32] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:13s]
+[00:02:32] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:13s]
+[00:02:32] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:13s]
+[00:02:33] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:13s]
+[00:02:33] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:12s]
+[00:02:33] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:12s]
+[00:02:33] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:12s]
+[00:02:34] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:12s]
+[00:02:34] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:11s]
+[00:02:34] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:11s]
+[00:02:34] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:11s]
+[00:02:35] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:11s]
+[00:02:35] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:10s]
+[00:02:35] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:10s]
+[00:02:35] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:10s]
+[00:02:36] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:10s]
+[00:02:36] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:09s]
+[00:02:36] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:09s]
+[00:02:36] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:09s]
+[00:02:37] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:09s]
+[00:02:37] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:08s]
+[00:02:37] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:08s]
+[00:02:37] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:08s]
+[00:02:38] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:08s]
+[00:02:38] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:07s]
+[00:02:38] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:07s]
+[00:02:38] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:07s]
+[00:02:39] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:07s]
+[00:02:39] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:06s]
+[00:02:39] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:06s]
+[00:02:39] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:06s]
+[00:02:40] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:06s]
+[00:02:40] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:05s]
+[00:02:40] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:05s]
+[00:02:40] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:05s]
+[00:02:41] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:05s]
+[00:02:41] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:04s]
+[00:02:41] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:04s]
+[00:02:41] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:04s]
+[00:02:42] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:04s]
+[00:02:42] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:03s]
+[00:02:42] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:03s]
+[00:02:42] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:03s]
+[00:02:43] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:03s]
+[00:02:43] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:02s]
+[00:02:43] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:02s]
+[00:02:43] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:02s]
+[00:02:44] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:02s]
+[00:02:44] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:01s]
+[00:02:44] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:01s]
+[00:02:44] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:01s]
+[00:02:45] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:01s]
+[00:02:45] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:00s]
+[00:02:45] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:00s]
+[00:02:45] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:00s]
+[00:02:46] Jobs: 1 (f=0): [/(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 02m:00s]
+[00:02:47] Jobs: 1 (f=1): [w(1)][-.-%][r=0KiB/s,w=0KiB/s][r=0,w=0 IOPS][eta 00m:00s]
+[00:02:48] Jobs: 1 (f=1): [w(1)][47.8%][r=0KiB/s,w=334MiB/s][r=0,w=85.6k IOPS][eta 00m:35s]
+[00:02:49] Jobs: 1 (f=1): [w(1)][49.3%][r=0KiB/s,w=335MiB/s][r=0,w=85.7k IOPS][eta 00m:34s]
+[00:02:50] Jobs: 1 (f=1): [w(1)][50.0%][r=0KiB/s,w=316MiB/s][r=0,w=80.8k IOPS][eta 00m:34s]
+[00:02:51] Jobs: 1 (f=1): [w(1)][52.2%][r=0KiB/s,w=346MiB/s][r=0,w=88.6k IOPS][eta 00m:32s]
+[00:02:52] Jobs: 1 (f=1): [w(1)][53.7%][r=0KiB/s,w=358MiB/s][r=0,w=91.7k IOPS][eta 00m:31s]
+[00:02:52] Jobs: 1 (f=1): [w(1)][51.4%][r=0KiB/s,w=336MiB/s][r=0,w=85.0k IOPS][eta 00m:35s]
+[00:02:52] RUN_randwrite: No I/O performed by libaio, perhaps try --debug=io option for details?
+[00:02:52] 
+[00:02:52] RUN_randwrite: (groupid=0, jobs=1): err= 0: pid=3067: Thu Dec 12 10:37:21 2019
+[00:02:52]   write: IOPS=86.3k, BW=337MiB/s (354MB/s)(2054MiB/6089msec)
+[00:02:52]    bw (  KiB/s): min=308264, max=374208, per=100.00%, avg=345554.58, stdev=18719.74, samples=12
+[00:02:52]    iops        : min=77066, max=93552, avg=86388.58, stdev=4679.98, samples=12
+[00:02:52]   cpu          : usr=11.22%, sys=53.44%, ctx=14468, majf=0, minf=5
+[00:02:52]   IO depths    : 1=0.1%, 2=0.1%, 4=0.1%, 8=0.1%, 16=0.1%, 32=0.1%, >=64=598.4%
+[00:02:52]      submit    : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.0%, >=64=0.0%
+[00:02:52]      complete  : 0=0.0%, 4=100.0%, 8=0.0%, 16=0.0%, 32=0.0%, 64=0.1%, >=64=0.0%
+[00:02:52]      issued rwt: total=0,525722,0, short=0,0,0, dropped=0,0,0
+[00:02:52]      latency   : target=0, window=0, percentile=100.00%, depth=64
+[00:02:52] 
+[00:02:52] Run status group 0 (all jobs):
+[00:02:52]   WRITE: bw=337MiB/s (354MB/s), 337MiB/s-337MiB/s (354MB/s-354MB/s), io=2054MiB (2154MB), run=6089-6089msec
+[00:02:52] 
+[00:02:52] Disk stats (read/write):
+[00:02:52]     dm-0: ios=15/3138309, merge=0/0, ticks=8/1807960, in_queue=1807968, util=98.91%, aggrios=60/3145764, aggrmerge=0/36, aggrticks=55/1842450, aggrin_queue=64784, aggrutil=98.82%
+[00:02:52]   sda: ios=60/3145764, merge=0/36, ticks=55/1842450, in_queue=64784, util=98.82%
+[00:02:52] 
+[00:02:52] Filesystem                         Type      Size  Used Avail Use% Mounted on
+[00:02:52] udev                               devtmpfs  2.8G     0  2.8G   0% /dev
+[00:02:52] tmpfs                              tmpfs     578M  464K  577M   1% /run
+[00:02:52] /dev/mapper/appveyor--u18--vg-root ext4       58G   31G   25G  56% /
+[00:02:52] tmpfs                              tmpfs     2.9G   12K  2.9G   1% /dev/shm
+[00:02:52] tmpfs                              tmpfs     5.0M     0  5.0M   0% /run/lock
+[00:02:52] tmpfs                              tmpfs     2.9G     0  2.9G   0% /sys/fs/cgroup
+[00:02:52] /dev/sda1                          vfat      511M  6.1M  505M   2% /boot/efi
+[00:02:52] Say "Remove net 4.8 target for msbuild on linux?"
+[00:02:52] # sed -i 's/net48;//g' Universe.CpuUsage/Universe.CpuUsage.csproj
+[00:02:52] 
+[00:02:52] ● appveyor-vm [00:03:12] #9 Remove net 4.8 target for msbuild on linux?
+[00:02:52] Running "test_script" scripts
+[00:02:52] if ($isWindows) {
+[00:02:52] }
+[00:02:52] 
+[00:02:52] Say ".NET Core Tests"
+[00:02:52] pushd .
+[00:02:52] if ($isWindows) 
+[00:02:52] {
+[00:02:52] } 
+[00:02:52] else 
+[00:02:52] {
+[00:02:52] }
+[00:02:52] popd
+[00:02:52] 
+[00:02:52] [02:49] .NET Core Tests
+[00:02:52] echo "Starting tests using Mono in [$(pwd)]"
+[00:02:52] 
+[00:02:52] Starting tests using Mono in [/home/appveyor/projects/cloud-internals]
+[00:02:52] 
+[00:02:52] Say "Pack working folder as the 'AppVeyor Build Folder.7z' artifact"
+[00:02:52] & "7z" a -t7z -mx=3 -ms=on "AppVeyor Build Folder.7z" .
+[00:02:52] Say "Bye-bye"
+[00:02:52] 
+[00:02:52] [02:49] Pack working folder as the 'AppVeyor Build Folder.7z' artifact
+[00:02:53] 
+[00:02:53] 7-Zip [64] 16.02 : Copyright (c) 1999-2016 Igor Pavlov : 2016-05-21
+[00:02:53] p7zip Version 16.02 (locale=C.UTF-8,Utf16=on,HugeFiles=on,64 bits,2 CPUs Intel(R) Xeon(R) CPU E5-2697 v3 @ 2.60GHz (306F2),ASM,AES-NI)
+[00:02:53] 
+[00:02:53] Scanning the drive:
+[00:02:53] 19 folders, 32 files, 67008 bytes (66 KiB)
+[00:02:53] 
+[00:02:53] Creating archive: AppVeyor Build Folder.7z
+[00:02:53] 
+[00:02:53] Items to compress: 51
+[00:02:53] 
+[00:02:53] 
+[00:02:53] Files read from disk: 32
+[00:02:53] Archive size: 37503 bytes (37 KiB)
+[00:02:53] Everything is Ok
+[00:02:53] [02:49] Bye-bye
+[00:02:53] Running "after_test" scripts
+[00:02:53] find . -name "*.nupkg" -exec rm -f {} \;
+[00:02:53] Show-System-Stat || true
+[00:02:53] User CPU Usage (normal priority) ..... 00:01:19
+[00:02:53] User CPU Usage (low priority) ........ 00:00:00
+[00:02:53] System CPU Usage ..................... 00:01:13
+[00:02:53] --------------------------------------
+[00:02:53] Total CPU Usage ...................... 00:02:32
+[00:02:53] Uptime ............................... 00:03:13
+[00:02:53] lo: .................................. 20 Kb   [sent] + 20 Kb   [recieved]
+[00:02:53] eth0: ................................ 538 Kb  [sent] + 53 Mb   [recieved]
+[00:02:53] Stop-Transcript;
+[00:02:53] Transcript stopped, output file is /home/appveyor/projects/cloud-internals/Artifact/Detailed-Build.log
+[00:02:53] Collecting artifacts...
+[00:02:53] Found artifact 'Artifact' matching 'Artifact' path
+[00:02:53] Found artifact 'AppVeyor Build Folder.7z' matching 'AppVeyor Build Folder.7z' path
+[00:02:53] No artifacts found matching '**/Release/*.nupkg' path
+[00:02:53] Uploading artifacts...
+[00:02:53] 
+[00:02:53] [1/2] Artifact...Zipping to Artifact.zip
+[00:02:53] [1/2] Artifact.zip (992 bytes)...100%
+[00:02:54] 
+[00:02:54] [2/2] AppVeyor Build Folder.7z (37,503 bytes)...100%
+[00:02:55] Build completed
