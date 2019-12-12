@@ -21,9 +21,10 @@ matrix:
     services:
         - docker
 
-  - name: OS X 10.10
-    os: osx
-    osx_image: xcode6.4
+#    10.10 needs new gcc, which takes too much time
+#  - name: OS X 10.10
+#    os: osx
+#    osx_image: xcode6.4
 
   - name: Ubuntu 18.04
     os: linux
