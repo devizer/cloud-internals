@@ -41,6 +41,7 @@ init:
     echo ""
 
 - cmd: mkdir \tmp
+- sh: export NET_TEST_RUNNERS_INSTALL_DIR=~/bin; script=https://raw.githubusercontent.com/devizer/test-and-build/master/install-net-test-runners.sh; (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -ksSL $script) | bash
 - ps: nunit3-console --version; echo ""
 - ps: xunit.console >/tmp/xunit-ver; cat /tmp/xunit-ver | head -2; ""
 - ps: nuget >/tmp/nuget-ver; cat /tmp/nuget-ver | head -1; ""
