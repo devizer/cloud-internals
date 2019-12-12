@@ -48,8 +48,8 @@ steps:
       mkdir c:/123b
       ls -la c:/123a
       ls -la c:/
-      cmd /c dir c:\\123a
-      cmd /c dir c:\\123b
+      # cmd /c dir c:\\123a
+      # cmd /c dir c:\\123b
 
 
       exit 0
