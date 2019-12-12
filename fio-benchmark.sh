@@ -25,9 +25,9 @@
    toilet -f term -F border "$caption ($(pwd))"
    echo "Benchmark '$(pwd)' folder using '$cmd' test during $DURATION seconds and heating $RAMP secs, size is $SIZE"
    if [[ $cmd == "rand"* ]]; then
-      fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=run_$cmd --filename=fiotest --bs=4k --iodepth=64 --size=$SIZE --runtime=$DURATION --ramp_time=$RAMP --readwrite=$cmd
+      fio --randrepeat=1 --ioengine=libaio --direct=1 --gtod_reduce=1 --name=run_$cmd --filename=fiotest.tmp --bs=4k --iodepth=64 --size=$SIZE --runtime=$DURATION --ramp_time=$RAMP --readwrite=$cmd
    else
-      fio --ioengine=libaio --direct=1 --gtod_reduce=1 --name=run_$cmd --filename=fiotest --bs=1024k --size=$SIZE --runtime=$DURATION --ramp_time=$RAMP --readwrite=$cmd 
+      fio --ioengine=libaio --direct=1 --gtod_reduce=1 --name=run_$cmd --filename=fiotest.tmp --bs=1024k --size=$SIZE --runtime=$DURATION --ramp_time=$RAMP --readwrite=$cmd 
    fi
    popd >/dev/null
    echo ""
@@ -40,7 +40,7 @@
    go_fio_1test write     $disk "${caption}: Sequential write"
    go_fio_1test randread  $disk "${caption}: Random read"
    go_fio_1test randwrite $disk "${caption}: Random write"
-   rm -f $disk/fiotest
+   rm -f $disk/fiotest.tmp
  }
  
  go_fio_4tests "$DISK" "$CAPTION"
