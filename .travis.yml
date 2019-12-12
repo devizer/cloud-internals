@@ -48,7 +48,7 @@ before_script:
 
 - |
   if [[ "$OS_X_VER" ]]; then 
-    brew install toilet
+    brew install toilet fio coreutils | grep 'toilet\|fio\|pv\|pigz\|coreutils'
     brew install fio
   else
     sudo apt-get update -qq
