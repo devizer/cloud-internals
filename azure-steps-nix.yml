@@ -35,3 +35,14 @@ steps:
       echo "OK?!"
       exit 0
     displayName: 'Show [$(OS)] Info'
+
+  - bash: |
+      msbuild /version; echo ""
+      dotnet build /version; echo ""
+      nuget >.1.tmp; cat .1.tmp | head -3
+      mono --version
+      dotnet --info
+      curl --version
+
+      exit 0
+    displayName: 'Show .NET for [$(OS)]'
