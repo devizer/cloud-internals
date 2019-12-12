@@ -2,7 +2,7 @@
 
 steps:
 
-  - script: |
+  - bash: |
       OS_X_VER=$(sw_vers 2>/dev/null | grep BuildVer | awk '{print $2}' | cut -c1-2 || true); OS_X_VER=$((OS_X_VER-4)); [ "$OS_X_VER" -gt 0 ] || unset OS_X_VER
 
       commits_count=$(git log -n 999999 --date=raw --pretty=format:"%cd" | wc -l)
