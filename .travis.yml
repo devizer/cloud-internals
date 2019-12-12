@@ -61,6 +61,7 @@ before_script:
   else
     sudo apt-cache policy fio
   fi
+  true
 
 - |
   if [[ "$OS_X_VER" -ge 12 || "$TRAVIS_OS_NAME" == "linux" ]]; then
