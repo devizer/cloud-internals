@@ -31,7 +31,7 @@ init:
     Say "Block Devices"
     sudo fdisk -l
     Say "Mount Volumes"
-    df -h T
+    df -h -T
 
 - cmd: mkdir \tmp
 - ps: nunit3-console --version
