@@ -77,8 +77,8 @@ init:
 - ps: docker version; ""
 - sh: |
     # docker-compose is nissed on Ubuntu
-    dock_comp_ver=1.24.1 
-    sudo curl --fail -ksSL -o /usr/local/bin/docker-compose "https://github.com/docker/compose/releases/download/$dock_comp_ver/docker-compose-$(uname -s)-$(uname -m)"
+    url="https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)"
+    sudo curl --fail -ksSL -o /usr/local/bin/docker-compose $url
     sudo chmod +x /usr/local/bin/docker-compose
 - ps: docker-compose version; ""
 
