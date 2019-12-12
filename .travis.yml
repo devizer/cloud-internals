@@ -76,7 +76,8 @@ script:
 - export CI=false
 - df -h -T || true
 - df -h || true
-- free -m
+- free -m || true
+- diskutil list || true
 - sudo fdisk -l || true
 - lscpu || true
 - sudo lshw || true
