@@ -1,0 +1,42 @@
+  
+
+steps:
+
+  - script: |
+      OS_X_VER=$(sw_vers 2>/dev/null | grep BuildVer | awk '{print $2}' | cut -c1-2 || true); OS_X_VER=$((OS_X_VER-4)); [ "$OS_X_VER" -gt 0 ] || unset OS_X_VER
+
+      commits_count=$(git log -n 999999 --date=raw --pretty=format:"%cd" | wc -l)
+      echo "OS is ........................ [$OS]"
+      echo "BUILD_SOURCESDIRECTORY is .... [$BUILD_SOURCESDIRECTORY]"
+      echo "AGENT_BUILDDIRECTORY ......... [$AGENT_BUILDDIRECTORY]"
+      echo "build number is .............. [$commits_count]"
+      echo "working folder ............... [$(pwd)]"
+      echo "message ...................... [$BUILD_SOURCEVERSIONMESSAGE]"
+      echo "OS_X_VER ..................... [$OS_X_VER]"
+
+      echo "##vso[task.setvariable variable=OS_X_VER]$OS_X_VER"
+    displayName: 'INIT/MAIN [$(IMAGE)::$(ARCH)] (define FINAL_SIZE and OUTPUT_FOLDER)'
+
+  - powershell: |
+      # copy paste it
+      function Say { param( [string] $message )
+          Write-Host "$(Get-Elapsed) " -NoNewline -ForegroundColor Magenta
+          Write-Host "$message" -ForegroundColor Yellow
+      }
+      
+      function Get-Elapsed
+      {
+          if ($Global:startAt -eq $null) { $Global:startAt = [System.Diagnostics.Stopwatch]::StartNew(); }
+          [System.String]::Concat("[", (new-object System.DateTime(0)).AddMilliseconds($Global:startAt.ElapsedMilliseconds).ToString("mm:ss"), "]");
+      }; Get-Elapsed | out-null;
+
+      # Display OS and CPU
+      if ($isWindows) {
+          $currentVersion=Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+          $win_10_release_id = $currentVersion.ReleaseId; if (! $win_10_release_id) { $win_10_release_id = $currentVersion.CurrentBuildNumber }
+          $win_name = $(Get-WMIObject win32_operatingsystem -EA SilentlyContinue).Caption
+          Say "$($win_name): Release [$win_10_release_id], powershell [$($PSVersionTable.PSVersion)]"
+          $cpu=Get-WmiObject Win32_Processor; Say "CPU: $($cpu.Name), $([System.Environment]::ProcessorCount) Cores";
+      }
+
+    displayName: 'Show Windows Info'

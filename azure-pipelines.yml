@@ -1,0 +1,33 @@
+jobs:
+  - job: Ubuntu_Bionic
+    variables:
+      OS: Linux
+    timeoutInMinutes: 599
+    cancelTimeoutInMinutes: 1
+    pool:
+      vmImage: 'ubuntu-18.04'
+    steps:
+      - template: azure-steps-nix.yml
+
+  - job: MacOS_Mojave
+    variables:
+      OS: OSX
+    timeoutInMinutes: 599
+    cancelTimeoutInMinutes: 1
+    pool:
+      vmImage: 'macos-10.14'
+    steps:
+      - template: azure-steps-nix.yml
+
+  - job: Windows_2019
+    variables:
+      OS: Windows
+    timeoutInMinutes: 599
+    cancelTimeoutInMinutes: 1
+    pool:
+      vmImage: 'windows-2019'
+    steps:
+      - template: azure-steps-windows.yml
+
+trigger:
+- master

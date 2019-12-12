@@ -1,0 +1,25 @@
+  
+
+steps:
+
+  - script: |
+      OS_X_VER=$(sw_vers 2>/dev/null | grep BuildVer | awk '{print $2}' | cut -c1-2 || true); OS_X_VER=$((OS_X_VER-4)); [ "$OS_X_VER" -gt 0 ] || unset OS_X_VER
+
+      commits_count=$(git log -n 999999 --date=raw --pretty=format:"%cd" | wc -l)
+      echo "OS is ........................ [$OS]"
+      echo "BUILD_SOURCESDIRECTORY is .... [$BUILD_SOURCESDIRECTORY]"
+      echo "AGENT_BUILDDIRECTORY ......... [$AGENT_BUILDDIRECTORY]"
+      echo "build number is .............. [$commits_count]"
+      echo "working folder ............... [$(pwd)]"
+      echo "message ...................... [$BUILD_SOURCEVERSIONMESSAGE]"
+      echo "OS_X_VER ..................... [$OS_X_VER]"
+
+      echo "##vso[task.setvariable variable=OS_X_VER]$OS_X_VER"
+    displayName: 'INIT/MAIN [$(IMAGE)::$(ARCH)] (define FINAL_SIZE and OUTPUT_FOLDER)'
+
+  - powershell: |
+      & df -h
+      & diskutil list
+      & sudo fdisk -l
+      & uname -a
+    displayName: 'Show Nix Info'

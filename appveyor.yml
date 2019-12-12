@@ -28,6 +28,7 @@ skip_commits:
     - .circleci/*
     - '.travis.yml'
     - '*.md'
+    - 'azure-*.yml'
 
 clone_depth: 99999999
 
