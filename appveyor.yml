@@ -9,15 +9,14 @@ environment:
 
   matrix:
 
-    - JUST_NOTHING: sure
+    - NOTHING_SPECIAL: sure
     - DISK_BENCHMARK: "12582912" # 12G
     - LINUX_FIO_BENCHMARK: "12G"
 
- 
 matrix:
   exclude:
 
-    - DISK_BENCHMARK: "12G"
+    - DISK_BENCHMARK: "12582912"
       image: "Visual Studio 2019"
 
     - LINUX_FIO_BENCHMARK: "12G"
