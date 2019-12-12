@@ -33,8 +33,10 @@ init:
     Say "Mount Volumes"
     df -h T
 
-- ps: 
-    nunit3-console
+- ps: nunit3-console --version
+- ps: nunit3-console 
+- ps: xunit.console --version
+- ps: xunit.console
 
 - sh: |
     Say "Installing disk-benchmark"
