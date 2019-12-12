@@ -33,6 +33,9 @@ init:
     Say "Mount Volumes"
     df -h T
 
+- ps: 
+    nunit3-console
+
 - sh: |
     Say "Installing disk-benchmark"
     script=https://raw.githubusercontent.com/devizer/glist/master/install-disk-benchmark-from-source.sh; (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -sSL $script) | bash
@@ -99,28 +102,21 @@ after_build:
 test_script:
 - ps: |
     if ($isWindows) {
-        Say ".NET Framework Tests"
-        dotnet build -f net47 -c Debug
-        pushd "Universe.CpuUsage.Tests\bin\Debug\net47"
-        nunit3-console Universe.CpuUsage.Tests.dll --workers=1 "--result=Universe.CpuUsage.Tests.Result.xml;format=AppVeyor"
-        popd
     }
 
 - ps: |
     Say ".NET Core Tests"
-    pushd Universe.CpuUsage.Tests 
-    if ($isWindows) {
-             dotnet test -f netcoreapp3.0 -c Release --test-adapter-path:. --logger:Appveyor
-    } else {
-             dotnet test -f netcoreapp3.0 -c Release --test-adapter-path:. --logger:Appveyor
+    pushd .
+    if ($isWindows) 
+    {
+    } 
+    else 
+    {
     }
     popd
 
 - sh: |
       echo "Starting tests using Mono in [$(pwd)]"
-      cd Tests4Mono; set +e; source build-the-matrix.sh; echo $matrix_run
-      # need -e -c
-      bash -e -c "$matrix_run" || true
 
 - ps: | 
 
