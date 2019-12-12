@@ -98,9 +98,10 @@ script:
 - brew versions gcc || true
 - lscpu || true
 - sudo lshw || true
-- sudo bash fio-benchmark.sh "Home Folder" "$HOME" ${WORKING_SET}G ${BENCHMARK_DURATION} 30
+- Drop-FS-Cache; sudo bash fio-benchmark.sh "Home Folder" "$HOME" ${WORKING_SET}G ${BENCHMARK_DURATION} 30
 - |
   if [[ "$OS_X_VER" -ge 12 || "$TRAVIS_OS_NAME" == "linux" ]]; then
+     Drop-FS-Cache
      disk-benchmark -s=$((WORKING_SET*1024*1024)) -t=${BENCHMARK_DURATION} | cat || true
   fi
 
