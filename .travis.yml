@@ -9,7 +9,7 @@ git:
 matrix:
   include:
 
-  - name: OS X 10.14 (.net core & mono)
+  - name: OS X 10.14
     os: osx
     osx_image: xcode10.2
 
@@ -19,17 +19,21 @@ matrix:
     services:
         - docker
 
+  - name: OS X 10.10
+    os: osx
+    osx_image: xcode6.4
+
   - name: Linux 18.04
     os: linux
     dist: bionic
     services:
         - docker
 
-  - name: OS X 10.13 (.net core & mono)
+  - name: OS X 10.13
     os: osx
     osx_image: xcode9.4
 
-  - name: OS X 10.12 (.net core & mono)
+  - name: OS X 10.12
     os: osx
     osx_image: xcode8.3
 
