@@ -51,13 +51,15 @@ before_script:
 - |
   if [[ "$OS_X_VER" ]]; then 
     Say "Install ruby"
-    brew install ruby 
+    time brew install ruby 
 
-    Say "Install GCC"
-    brew install gcc 
+    if [[ "$OS_X_VER" -lt 12 ]]; then
+        Say "Install GCC"
+        time brew install gcc@6 
+    fi
     
     Say "--*******### INSTALL FIO & TOILET ###*******--"
-    brew install toilet fio # | grep 'toilet\|fio\|pv\|pigz\|coreutils'
+    time brew install toilet fio # | grep 'toilet\|fio\|pv\|pigz\|coreutils'
   else
     sudo apt-cache policy fio
   fi
