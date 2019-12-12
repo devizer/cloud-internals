@@ -75,6 +75,11 @@ init:
 - ps: nunit3-console --version; echo ""
 - ps: xunit.console >/tmp/xunit-ver; cat /tmp/xunit-ver | head -2; ""
 - ps: docker version; ""
+- sh: |
+    # docker-compose is nissed on Ubuntu
+    dock_comp_ver=1.24.1 
+    sudo curl --fail -ksSL -o /usr/local/bin/docker-compose "https://github.com/docker/compose/releases/download/$dock_comp_ver/docker-compose-$(uname -s)-$(uname -m)"
+    sudo chmod +x /usr/local/bin/docker-compose
 - ps: docker-compose version; ""
 
 - sh: |
