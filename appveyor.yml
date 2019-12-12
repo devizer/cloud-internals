@@ -147,7 +147,8 @@ build_script:
        Say "Havy disk-benchmark: $DISK_BENCHMARK Kb"
        LINUX_FIO_BENCHMARK=1G
        HAVY_DISK_BENCHMARK_DURATION=7
-       bash fio-benchmark.sh "$(pwd)" $LINUX_FIO_BENCHMARK $HAVY_DISK_BENCHMARK_DURATION 30
+       bash fio-benchmark.sh "Home Folder" "$HOME" $LINUX_FIO_BENCHMARK $HAVY_DISK_BENCHMARK_DURATION 30
+       df -h -T
     fi
 
 - sh: |
