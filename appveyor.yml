@@ -52,7 +52,8 @@ init:
 - sh: |
     Say "Installing disk-benchmark"
     script=https://raw.githubusercontent.com/devizer/glist/master/install-disk-benchmark-from-source.sh; (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -sSL $script) | bash
-    disk-benchmark -s=$((1*1024*1024)) -t=30000 | cat
+    Say "Express disk benchmark (256Mb working set, 5 seconds)"
+    disk-benchmark -s=$((256*1024)) -t=5000 | cat
     true
     
 - ps: |
