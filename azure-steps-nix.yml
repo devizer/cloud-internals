@@ -72,7 +72,10 @@ steps:
     displayName: 'Show .NET for [$(OS)]'
 
   - powershell: |
-       $arr=$Env:PATH.Split([char]59) | sort; $arr
+       & uname -s;
+       & uname -a;
+       & uname -r;
+       $Env:PATH.Split([char]59) | sort
     displayName: 'Show PATH for [$(OS)]'
 
   - powershell: |
