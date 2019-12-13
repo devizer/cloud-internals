@@ -72,6 +72,10 @@ steps:
     displayName: 'Show .NET for [$(OS)]'
 
   - powershell: |
+       $arr=$Env:PATH.Split([char]59) | sort; $arr
+    displayName: 'Show PATH for [$(OS)]'
+
+  - powershell: |
       if ($Env:OS -eq "Windows") {
         get-wmiobject win32_service | where {$_.Name.ToLower().IndexOf("sql") -ge 0 } | sort-object -Property "DisplayName" | ft State, Name, DisplayName, StartMode, StartName
       }
