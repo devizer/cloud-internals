@@ -1,0 +1,20 @@
+Disk: /Users/runner/runners/2.160.1/work/1/s, WorkingSet: 10G, Flavour: Random, Block: 4096 bytes
+[Completed]  Direct Access is detected
+[Completed]  100.0% 00:03:21   50.9M/s Allocate 10G
+[Completed]  100.0% 00:00:31  326.7M/s Sequential read
+[Completed]  100.0% 00:00:57    177M/s Sequential write
+[Completed]  100.0% 00:01:00   53.3M/s Random Read, 1 thread
+[Completed]  100.0% 00:01:00 3766.3K/s Random Write, 1 thread
+[Completed]  100.0% 00:01:00  144.7M/s Random Read, 16 threads
+[Completed]  100.0% 00:01:00 7305.3K/s Random Write, 16 threads
+
+Disk: /Users/runner/runners/2.160.1/work/1/s, WorkingSet: 97.7M, Flavour: Random, Block: 4096 bytes
+[Completed]  Direct Access is detected
+[Completed]  100.0% 00:00:02   42.7M/s Allocate 97.7M
+[Completed]  100.0% 00:00:00 5657.3M/s Sequential read
+[Completed]  100.4% 00:00:00  159.6M/s Sequential write
+[Completed]  100.1% 00:00:02  941.6M/s Random Read, 1 thread
+[Completed]  100.1% 00:00:02 4021.1K/s Random Write, 1 thread
+[Completed]  100.1% 00:00:02   1348M/s Random Read, 16 threads
+[Completed]  100.5% 00:00:02 5289.3K/s Random Write, 16 threads
+[Completed]  Clean up

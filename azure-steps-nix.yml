@@ -98,6 +98,8 @@ steps:
       (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -sSL $script) | bash
       # for bash we should spicify cmd-extention
       # disk-benchmark.cmd --help
+      # for powershell extention is not required
+      # & disk-benchmark --help
     displayName: 'Install DISK-BENCHMARK for [$(OS)]'
 
   - powershell: |
