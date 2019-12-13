@@ -21,6 +21,8 @@ steps:
   - powershell: |
       $ErrorActionPreference = "Continue"
       & uname -a
+      & uname -s
+      & uname -m
       & df -h
       & diskutil list
       & sudo fdisk -l
