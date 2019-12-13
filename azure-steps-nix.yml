@@ -20,6 +20,7 @@ steps:
 
   - powershell: |
       $ErrorActionPreference = "Continue"
+      if (Test-Path "/mnt") { & sudo chown -R $(whoami) /mnt }
       & uname -a
       & uname -s
       & uname -m
@@ -107,6 +108,18 @@ steps:
     displayName: 'Express disk-benchmark on [$(OS)]'
 
   - powershell: |
-      & disk-benchmark "-s=$(10*1024*1024)" -t=60000
-    displayName: 'Heavy disk-benchmark on [$(OS)]'
+      $size=10*1024*1024
+      if ($Env:OS -eq "OSX") { $size=32*1024*1024}
+      & disk-benchmark "-s=$($size)" -t=60000
+    condition: false
+    displayName: 'Heavy disk-benchmark on [$(OS)] for *WORKING* disk'
+
+  - powershell: |
+      if ($Env:OS -eq "Linux") { $disk="/mnt" }
+      if ($Env:OS -eq "Windows") { $disk="c:\" }
+      
+      if ($disk) { 
+        & disk-benchmark "-p=$($disk)" "-s=$(1*1024*1024)" -t=6000
+      }
+    displayName: 'Heavy disk-benchmark on [$(OS)] for *SECOND* disk'
 
