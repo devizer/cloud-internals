@@ -110,16 +110,16 @@ steps:
   - powershell: |
       $size=10*1024*1024
       if ($Env:OS -eq "OSX") { $size=32*1024*1024}
-      & disk-benchmark "-s=$($size)" -t=60000
-    condition: false
+      & disk-benchmark "-s=$($size)" -t=90000
+    condition: succeeded() # false ;)
     displayName: 'Heavy disk-benchmark on [$(OS)] for *WORKING* disk'
 
   - powershell: |
-      if ($Env:OS -eq "Linux") { $disk="/mnt" }
-      if ($Env:OS -eq "Windows") { $disk="c:\" }
+      if ($Env:OS -eq "Linux") { $disk="/mnt"; $size=12 }
+      if ($Env:OS -eq "Windows") { $disk="c:\"; $size=7 }
       
       if ($disk) { 
-        & disk-benchmark "-p=$($disk)" "-s=$(1*1024*1024)" -t=6000
+        & disk-benchmark "-p=$($disk)" "-s=$($size*1024*1024)" -t=90000
       }
     displayName: 'Heavy disk-benchmark on [$(OS)] for *SECOND* disk'
 
