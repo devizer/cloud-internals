@@ -82,3 +82,11 @@ steps:
         get-wmiobject win32_service | where { $true } | sort-object -Property "DisplayName" | ft State, Name, DisplayName, StartMode, StartName
       }
     displayName: 'Show All Windows Services for [$(OS)]'
+
+  - bash: |
+      dotnet --info
+      script=https://raw.githubusercontent.com/devizer/glist/master/install-disk-benchmark-from-source.sh; 
+      (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -sSL $script) | bash
+      disk-benchmark --help
+    displayName: 'Install DISK-BENCHMARK for [$(OS)]'
+
