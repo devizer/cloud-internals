@@ -97,7 +97,7 @@ steps:
       script=https://raw.githubusercontent.com/devizer/glist/master/install-disk-benchmark-from-source.sh; 
       (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -sSL $script) | bash
       # for bash we should spicify cmd-extention
-      disk-benchmark.cmd --help
+      # disk-benchmark.cmd --help
     displayName: 'Install DISK-BENCHMARK for [$(OS)]'
 
   - powershell: |
