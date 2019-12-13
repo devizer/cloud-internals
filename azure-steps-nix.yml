@@ -99,3 +99,7 @@ steps:
       disk-benchmark --help
     displayName: 'Install DISK-BENCHMARK for [$(OS)]'
 
+  - powershell: |
+      & disk-benchmark -s=100000 -t=2000
+    displayName: 'Express disk-benchmark on [$(OS)]'
+
