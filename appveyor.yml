@@ -1,7 +1,8 @@
 version: '0.1.{build}'
 image:
-- Ubuntu1804
+- Visual Studio 2013
 - Visual Studio 2019
+- Ubuntu1804
 
 environment:
 
@@ -22,6 +23,12 @@ matrix:
 
     - LINUX_FIO_BENCHMARK: "12G"
       image: "Visual Studio 2019"
+
+    - DISK_BENCHMARK: "12582912"
+      image: "Visual Studio 2013"
+
+    - LINUX_FIO_BENCHMARK: "12G"
+      image: "Visual Studio 2013"
 
 skip_commits:
   files:
@@ -140,6 +147,10 @@ before_build:
     # Upgrade-PSReadLine
 
 build_script:
+- ps: |
+    if ($isWindows) {
+       get-wmiobject Win32_Product | sort -Property Vendor, Version | Format-Table IdentifyingNumber, Vendor, Version, Name, LocalPackage -AutoSize >MSI-Products.txt
+    }
 - sh: |
     if [[ "$DISK_BENCHMARK" ]]; then
        Say "Havy 'disk-benchmark': $((DISK_BENCHMARK/1024)) Mb, $HAVY_DISK_BENCHMARK_DURATION seconds for each test"
