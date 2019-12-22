@@ -154,14 +154,14 @@ build_script:
        # Microsoft .NET Framework 4.5.1 SDK 4.5.51641
 
        Say "Uninstalling NET 4.5.1 {19A5926D-66E1-46FC-854D-163AA10A52D3}"
-       & msiexec /x /qn /norestart {19A5926D-66E1-46FC-854D-163AA10A52D3} /Lv Uninstall-FW-4.5.1---A.log
+       & msiexec /x {19A5926D-66E1-46FC-854D-163AA10A52D3} /qn /norestart /Lv Uninstall-FW-4.5.1---A.log
        Say "Uninstalling NET 4.5.1 C:\Windows\Installer\3a5e0d.msi"
-       msiexec /x /qn /norestart C:\Windows\Installer\3a5e0d.msi        /Lv Uninstall-FW-4.5.1---B.log
+       msiexec /x C:\Windows\Installer\3a5e0d.msi /qn /norestart /Lv Uninstall-FW-4.5.1---B.log
 
        Say "Uninstalling NET 4.5 {4AE57014-05C4-4864-A13D-86517A7E1BA4}"
-       & msiexec /x /qn /norestart {4AE57014-05C4-4864-A13D-86517A7E1BA4} /Lv Uninstall-FW-4.5---C.log
+       & msiexec /x {4AE57014-05C4-4864-A13D-86517A7E1BA4} /qn /norestart /Lv Uninstall-FW-4.5---C.log
        Say "Uninstalling NET 4.5 C:\Windows\Installer\3a5e0d.msi"
-       msiexec /x /qn /norestart C:\Windows\Installer\3a5bcd.msi /Lv Uninstall-FW-4.5---D.log
+       msiexec /x C:\Windows\Installer\3a5bcd.msi /qn /norestart /Lv Uninstall-FW-4.5---D.log
 
        $unCounter=65+4
        @("AS-NET-Framework", "NET-Framework-45-ASPNET", "NET-Framework-45-Core", "NET-Framework-45-Features") | % {
