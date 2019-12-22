@@ -150,6 +150,7 @@ build_script:
 - ps: |
     if ($isWindows) {
        get-wmiobject Win32_Product | sort -Property Vendor, Version | Format-Table IdentifyingNumber, Vendor, Version, Name, LocalPackage -AutoSize >MSI-Products.txt
+       get-windowsfeature | ft -AutoSize >WindowsFeature.txt
     }
 - sh: |
     if [[ "$DISK_BENCHMARK" ]]; then
