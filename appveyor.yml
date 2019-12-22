@@ -149,8 +149,8 @@ before_build:
 build_script:
 - ps: |
     if ($isWindows) {
-       get-wmiobject Win32_Product | sort -Property Vendor, Version | Format-Table IdentifyingNumber, Vendor, Version, Name, LocalPackage -AutoSize | Out-File -Width 777 MSI-Products.txt
-       get-windowsfeature | ft -AutoSize | Out-File -Width 777 WindowsFeatures.txt
+       get-wmiobject Win32_Product | sort -Property Vendor, Version | Format-Table IdentifyingNumber, Vendor, Version, Name, LocalPackage -AutoSize | Out-File -Width 777 MSI-Products-Stage1.txt
+       get-windowsfeature | ft -AutoSize | Out-File -Width 777 WindowsFeatures-Stage1.txt
     }
 - sh: |
     if [[ "$DISK_BENCHMARK" ]]; then
