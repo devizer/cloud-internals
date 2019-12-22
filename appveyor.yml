@@ -170,6 +170,7 @@ build_script:
           $unCounter++; $charCounter=[char]$unCounter;
           Uninstall-WindowsFeature -Name $f *> "Uninstall-$($f)---$($charCounter).log"
        }
+       Say "Uninstalling NET 4.5 features complete"
 
        get-wmiobject Win32_Product | sort -Property Vendor, Version | Format-Table IdentifyingNumber, Vendor, Version, Name, LocalPackage -AutoSize | Out-File -Width 777 MSI-Products-Stage-Last.txt
        get-windowsfeature | ft -AutoSize | Out-File -Width 777 WindowsFeatures-Stage-Last.txt
