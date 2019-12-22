@@ -164,7 +164,7 @@ build_script:
        msiexec /x C:\Windows\Installer\3a5bcd.msi /L*v Uninstall-FW-4.5---D.log
 
        $unCounter=65+4
-       @("AS-NET-Framework", "NET-Framework-45-Core", "NET-Framework-45-ASPNET", "NET-Framework-45-Features") | % {
+       @("AS-NET-Framework", "NET-Framework-45-ASPNET", "NET-Framework-45-Core", "NET-Framework-45-Features") | % {
           $f=$_
           Say "Uninstalling $f"
           $unCounter++; $charCounter=[char]$unCounter;
