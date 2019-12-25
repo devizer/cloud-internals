@@ -102,7 +102,7 @@ script:
 - |
   if [[ "$OS_X_VER" -ge 12 || "$TRAVIS_OS_NAME" == "linux" ]]; then
      Drop-FS-Cache
-     disk-benchmark -s=$((WORKING_SET*1024*1024)) -t=${BENCHMARK_DURATION} | cat || true
+     disk-benchmark -s=$((WORKING_SET*1024*1024)) "-t=$((BENCHMARK_DURATION*1000))" | cat || true
   fi
 
 - 'Show-System-Stat || true'
