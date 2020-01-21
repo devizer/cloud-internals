@@ -5,7 +5,7 @@ jobs:
   - job: Ubuntu_Bionic
     variables:
       OS: Linux
-      FIO_BENCHMARK_WORKING: 'sudo bash fio-benchmark.sh "Home Folder" "$HOME" 16G 120 30'
+      FIO_BENCHMARK_WORKING: 'sudo bash fio-benchmark.sh "Home Linux Folder" "$HOME" 16G 120 30'
       FIO_BENCHMARK_SECOND: 'sudo bash fio-benchmark.sh "Second (/mnt)" "/mnt" 11G 120 30'
     timeoutInMinutes: 599
     cancelTimeoutInMinutes: 1
@@ -17,6 +17,7 @@ jobs:
   - job: MacOS_Mojave
     variables:
       OS: OSX
+      FIO_BENCHMARK_WORKING: 'sudo bash fio-benchmark.sh "Home OSX Folder" "$HOME" 32G 120 30'
     timeoutInMinutes: 599
     cancelTimeoutInMinutes: 1
     pool:
