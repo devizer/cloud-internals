@@ -94,6 +94,18 @@ steps:
     displayName: 'Show All Windows Services for [$(OS)]'
 
   - bash: |
+      echo $FIO_BENCHMARK_SECOND
+      eval "$FIO_BENCHMARK_SECOND"
+    condition: ne(variables['FIO_BENCHMARK_SECOND'], '')
+    displayName: 'FIO benchmark for *SECOND* disk for [$(OS)]'
+
+  - bash: |
+      echo $FIO_BENCHMARK_WORKING
+      eval "$FIO_BENCHMARK_WORKING"
+    condition: ne(variables['FIO_BENCHMARK_WORKING'], '')
+    displayName: 'FIO benchmark for *WORKING* disk for [$(OS)]'
+
+  - bash: |
       # dotnet --info
       script=https://raw.githubusercontent.com/devizer/glist/master/install-disk-benchmark-from-source.sh; 
       (wget -q -nv --no-check-certificate -O - $script 2>/dev/null || curl -sSL $script) | bash
