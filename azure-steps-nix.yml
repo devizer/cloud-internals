@@ -94,6 +94,11 @@ steps:
     displayName: 'Show All Windows Services for [$(OS)]'
 
   - bash: |
+      brew install fio toilet
+    condition: eq(variables['OS'], 'OSX')
+    displayName: 'Install FIO for OSX [$(OS)]'
+
+  - bash: |
       echo $FIO_BENCHMARK_SECOND
       eval "$FIO_BENCHMARK_SECOND"
     condition: ne(variables['FIO_BENCHMARK_SECOND'], '')
