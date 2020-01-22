@@ -190,6 +190,8 @@ build_script:
 
 - sh: |
     if [[ "$LINUX_FIO_BENCHMARK" ]]; then
+       Say "Install fio"
+       sudo apt-get update; sudo apt-get install fio toilet;
        Say "Havy 'fio' disk benchmark : $LINUX_FIO_BENCHMARK, $HAVY_DISK_BENCHMARK_DURATION seconds for each test"
        # LINUX_FIO_BENCHMARK=1G
        # HAVY_DISK_BENCHMARK_DURATION=7
