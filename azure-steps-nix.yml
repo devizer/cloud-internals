@@ -94,6 +94,7 @@ steps:
     displayName: 'Show All Windows Services for [$(OS)]'
 
   - bash: |
+      brew cask install xquartz
       brew install fio toilet
     condition: eq(variables['OS'], 'OSX')
     displayName: 'Install FIO for OSX [$(OS)]'
